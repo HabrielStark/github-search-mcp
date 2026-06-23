@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "vitest",
+  "plugins": ["@stryker-mutator/vitest-runner"],
+  "vitest": { "configFile": "vitest.config.ts" },
+  "coverageAnalysis": "perTest",
+  "concurrency": 4,
+  "timeoutMS": 20000,
+  "_comment": "Whole-codebase mutation gate: every src file except the CLI entry point, the re-export barrels, the generated version file, and type-only modules. Thresholds are enforced below; do not describe this as 100% unless thresholds are raised accordingly.",
+  "mutate": [
+    "src/**/*.ts",
+    "!src/cli.ts",
+    "!src/index.ts",
+    "!src/version.ts",
+    "!src/types/**",
+    "!src/tools/index.ts"
+  ],
+  "reporters": ["clear-text", "progress"],
+  "thresholds": { "high": 85, "low": 65, "break": 50 }
+}

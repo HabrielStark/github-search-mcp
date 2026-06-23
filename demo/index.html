@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OSS Research MCP Demo</title>
+    <meta
+      name="description"
+      content="A polished user-experience demo for discovering, analyzing, and comparing open-source GitHub repositories through OSS Research MCP."
+    />
+    <link rel="icon" href="./assets/oss-research-logo-128.png" />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #0d1117;
+        --muted: #59636e;
+        --line: #d8dee4;
+        --panel: #ffffff;
+        --canvas: #f6f8fa;
+        --accent: #2ea043;
+        --accent-ink: #176f2c;
+        --soft: #eef6f0;
+        --code: #161b22;
+        --radius: 18px;
+        --shadow: 0 24px 80px rgb(13 17 23 / 0.12);
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(180deg, #ffffff 0%, var(--canvas) 42%, #ffffff 100%), var(--canvas);
+        color: var(--ink);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgb(13 17 23 / 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgb(13 17 23 / 0.035) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: linear-gradient(180deg, black, transparent 78%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 76px;
+        gap: 24px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 760;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 32px rgb(13 17 23 / 0.14);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        border-radius: 999px;
+        padding: 9px 12px;
+        text-decoration: none;
+      }
+
+      .nav-links a:hover {
+        background: #ffffff;
+        color: var(--ink);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        gap: 54px;
+        align-items: center;
+        min-height: calc(100dvh - 76px);
+        padding: 42px 0 86px;
+      }
+
+      .hero > *,
+      .showcase,
+      .product-window,
+      .workspace,
+      .sidebar,
+      .input {
+        min-width: 0;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        margin: 0 0 20px;
+        border: 1px solid rgb(46 160 67 / 0.26);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--accent-ink);
+        padding: 7px 11px;
+        font-size: 13px;
+        font-weight: 720;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 11ch;
+        font-size: clamp(52px, 7vw, 92px);
+        line-height: 0.94;
+        letter-spacing: -0.065em;
+      }
+
+      .hero-copy {
+        margin-top: 24px;
+        max-width: 58ch;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.6;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        border-radius: 999px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        color: var(--ink);
+        font-weight: 720;
+        text-decoration: none;
+        box-shadow: 0 8px 28px rgb(13 17 23 / 0.08);
+      }
+
+      .button.primary {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #ffffff;
+      }
+
+      .button:active {
+        transform: translateY(1px);
+      }
+
+      .showcase {
+        position: relative;
+      }
+
+      .product-window {
+        overflow: hidden;
+        border: 1px solid rgb(13 17 23 / 0.1);
+        border-radius: var(--radius);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .window-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 46px;
+        border-bottom: 1px solid var(--line);
+        padding: 0 16px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #d0d7de;
+      }
+
+      .dot:nth-child(1) {
+        background: #ff6a69;
+      }
+
+      .dot:nth-child(2) {
+        background: #d29922;
+      }
+
+      .dot:nth-child(3) {
+        background: var(--accent);
+      }
+
+      .window-title {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .demo-body {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 520px;
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--line);
+        background: #fbfcfd;
+        padding: 20px;
+      }
+
+      .logo-lockup {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .logo-lockup img {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+      }
+
+      .logo-lockup span {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .tool-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .tool {
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .tool.active {
+        background: var(--soft);
+        color: var(--accent-ink);
+      }
+
+      .workspace {
+        padding: 24px;
+      }
+
+      .query-line {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .input {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: var(--muted);
+        font-size: 14px;
+        background: #ffffff;
+      }
+
+      .run {
+        border-radius: 14px;
+        border: 0;
+        background: var(--accent);
+        color: #ffffff;
+        padding: 14px 16px;
+        font-weight: 780;
+      }
+
+      .result-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .repo-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: start;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        background: #ffffff;
+      }
+
+      .repo-row strong {
+        display: block;
+        margin-bottom: 5px;
+        letter-spacing: -0.02em;
+      }
+
+      .repo-row p {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .score {
+        min-width: 76px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #ffffff;
+        padding: 8px 10px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 760;
+      }
+
+      .video-section,
+      .flow,
+      .commands {
+        padding: 92px 0;
+      }
+
+      .section-head {
+        display: grid;
+        gap: 14px;
+        max-width: 690px;
+        margin-bottom: 32px;
+      }
+
+      h2 {
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 1;
+        letter-spacing: -0.055em;
+      }
+
+      .section-head p {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        border: 1px solid rgb(13 17 23 / 0.12);
+        border-radius: var(--radius);
+        background: var(--ink);
+        box-shadow: var(--shadow);
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: #ffffff;
+        padding: 20px;
+      }
+
+      .step span {
+        display: inline-flex;
+        width: 28px;
+        height: 28px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--accent-ink);
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 18px;
+      }
+
+      .step h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+
+      .step p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .code-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      pre {
+        margin: 0;
+        overflow: auto;
+        border-radius: var(--radius);
+        background: var(--code);
+        color: #f0f6fc;
+        padding: 22px;
+        font-size: 13px;
+        line-height: 1.65;
+        box-shadow: 0 18px 48px rgb(13 17 23 / 0.18);
+      }
+
+      code {
+        font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        padding: 30px 0 44px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      @media (max-width: 920px) {
+        .hero,
+        .demo-body,
+        .code-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+          padding-top: 28px;
+        }
+
+        .steps {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 24px, 1180px);
+          max-width: calc(100vw - 24px);
+        }
+
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 18px 0;
+        }
+
+        .nav-links {
+          width: 100%;
+          overflow-x: auto;
+        }
+
+        h1 {
+          max-width: 10ch;
+        }
+
+        .query-line,
+        .repo-row,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy {
+          width: 330px;
+          max-width: calc(100vw - 24px);
+          font-size: 17px;
+        }
+
+        .actions {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .button {
+          width: 330px;
+          max-width: calc(100vw - 24px);
+          padding-inline: 14px;
+          white-space: nowrap;
+        }
+
+        .product-window {
+          width: calc(100vw - 24px);
+          max-width: 100%;
+        }
+
+        .window-title {
+          display: none;
+        }
+
+        .workspace,
+        .sidebar {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="shell nav">
+      <a class="brand" href="../README.md">
+        <img src="./assets/oss-research-logo-128.png" alt="OSS Research MCP logo" />
+        <span>OSS Research MCP</span>
+      </a>
+      <nav class="nav-links" aria-label="Demo navigation">
+        <a href="#video">Video</a>
+        <a href="#flow">Flow</a>
+        <a href="#commands">Commands</a>
+        <a href="../docs/tools.md">Tools</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="shell hero">
+        <div>
+          <p class="eyebrow">MCP user experience demo</p>
+          <h1>Research open source without leaving your client.</h1>
+          <p class="hero-copy">
+            Search GitHub, inspect license risk, compare candidates, and generate adoption notes
+            through one read-only MCP server.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#video">Watch the demo</a>
+            <a class="button" href="#commands">Copy setup commands</a>
+          </div>
+        </div>
+
+        <div class="showcase" aria-label="Product preview">
+          <div class="product-window">
+            <div class="window-bar">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="window-title">oss_find_open_source_alternatives</span>
+            </div>
+            <div class="demo-body">
+              <aside class="sidebar">
+                <div class="logo-lockup">
+                  <img src="./assets/oss-research-logo-128.png" alt="" />
+                  <div>
+                    <strong>Repository scout</strong>
+                    <span>12 read-only tools</span>
+                  </div>
+                </div>
+                <div class="tool-list">
+                  <div class="tool active">search repositories</div>
+                  <div class="tool">analyze repository</div>
+                  <div class="tool">compare repositories</div>
+                  <div class="tool">check license</div>
+                  <div class="tool">integration notes</div>
+                </div>
+              </aside>
+              <section class="workspace">
+                <div class="query-line">
+                  <div class="input">Postman alternative for API testing client</div>
+                  <button class="run" type="button">Run</button>
+                </div>
+                <div class="result-grid">
+                  <article class="repo-row">
+                    <div>
+                      <strong>hoppscotch/hoppscotch</strong>
+                      <p>Open-source API development ecosystem with strong docs and adoption.</p>
+                    </div>
+                    <div class="score">91/100</div>
+                  </article>
+                  <article class="repo-row">
+                    <div>
+                      <strong>usebruno/bruno</strong>
+                      <p>
+                        Git-friendly API client with local collections and permissive licensing.
+                      </p>
+                    </div>
+                    <div class="score">88/100</div>
+                  </article>
+                  <article class="repo-row">
+                    <div>
+                      <strong>insomnia/insomnia</strong>
+                      <p>
+                        Established API client with broad ecosystem and active maintenance signals.
+                      </p>
+                    </div>
+                    <div class="score">82/100</div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="video" class="shell video-section">
+        <div class="section-head">
+          <h2>One minute from install to useful answer.</h2>
+          <p>
+            The video walks through the first-run experience: start the server, connect an MCP
+            client, search, analyze, compare, and produce integration notes.
+          </p>
+        </div>
+        <video
+          controls
+          preload="metadata"
+          poster="./assets/demo-poster.png"
+          src="./oss-research-mcp-demo.mp4"
+        ></video>
+      </section>
+
+      <section id="flow" class="shell flow">
+        <div class="section-head">
+          <h2>The workflow users actually follow.</h2>
+          <p>
+            No custom dashboard is required. The server adds GitHub research tools to the MCP client
+            the user already works in.
+          </p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span>1</span>
+            <h3>Run it</h3>
+            <p>Start with npx or a global npm install. The default transport is stdio.</p>
+          </article>
+          <article class="step">
+            <span>2</span>
+            <h3>Connect it</h3>
+            <p>Add one MCP server entry. A GitHub token is optional for higher limits.</p>
+          </article>
+          <article class="step">
+            <span>3</span>
+            <h3>Ask naturally</h3>
+            <p>Search alternatives, inspect licenses, compare libraries, and read files.</p>
+          </article>
+          <article class="step">
+            <span>4</span>
+            <h3>Ship the decision</h3>
+            <p>Generate concise integration notes with risk, license, and setup context.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="commands" class="shell commands">
+        <div class="section-head">
+          <h2>Copy-paste setup.</h2>
+          <p>These commands are the same flow covered in the demo video.</p>
+        </div>
+        <div class="code-grid">
+          <pre><code>npx oss-research-mcp
+
+# optional, higher GitHub rate limits
+GITHUB_TOKEN=ghp_xxx npx oss-research-mcp</code></pre>
+          <pre><code>{
+  "mcpServers": {
+    "oss-research": {
+      "command": "npx",
+      "args": ["-y", "oss-research-mcp"],
+      "env": { "GITHUB_TOKEN": "" }
+    }
+  }
+}</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="shell footer">
+      <span>Read-only MCP tools for open-source repository research.</span>
+    </footer>
+  </body>
+</html>

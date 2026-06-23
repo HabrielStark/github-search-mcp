@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.local
+.DS_Store
+*.sqlite
+*.sqlite-journal
+.oss-research-mcp/
+.vitest/
+reports/
+.stryker-tmp/
+demo/.frames/

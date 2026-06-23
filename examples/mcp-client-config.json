@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "oss-research": {
+      "command": "npx",
+      "args": ["-y", "oss-research-mcp"],
+      "env": {
+        "GITHUB_TOKEN": "",
+        "OSS_MCP_LOG_LEVEL": "info"
+      }
+    }
+  }
+}

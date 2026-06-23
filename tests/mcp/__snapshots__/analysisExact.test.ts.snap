@@ -1,0 +1,147 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`oss_analyze_repository > returns the full analysis (no DeepWiki by default) 1`] = `
+{
+  "documentation": {
+    "hasChangelog": false,
+    "hasContributing": false,
+    "hasDocsFolder": true,
+    "hasExamples": true,
+    "hasInstallSection": true,
+    "hasReadme": true,
+    "hasSecurity": false,
+    "hasUsageSection": true,
+    "score": 100,
+  },
+  "license": {
+    "category": "permissive",
+    "commercialUse": "yes",
+    "detected": "MIT License",
+    "distribution": "yes",
+    "modification": "yes",
+    "notes": [
+      "Permissive license: broad commercial, modification and distribution rights with minimal obligations (typically attribution).",
+    ],
+    "privateUse": "yes",
+    "repository": "acme/repo-a",
+    "riskLevel": "low",
+    "spdxId": "MIT",
+  },
+  "maintenance": {
+    "archived": false,
+    "forks": 300,
+    "lastPushDaysAgo": 3,
+    "openIssues": 20,
+    "score": 94,
+    "stars": 1200,
+  },
+  "packageSignals": {
+    "detectedPackageManagers": [
+      "npm",
+    ],
+    "hasCI": true,
+    "hasDockerfile": true,
+    "hasExamples": true,
+    "hasTests": true,
+  },
+  "profile": {
+    "archived": false,
+    "createdAt": "2020-01-01T00:00:00Z",
+    "defaultBranch": "main",
+    "description": "repo-a — a sample repository",
+    "disabled": false,
+    "forks": 300,
+    "language": "TypeScript",
+    "license": "MIT",
+    "openIssues": 20,
+    "pushedAt": "2025-05-27T00:00:00.000Z",
+    "repository": "acme/repo-a",
+    "sizeKb": 5000,
+    "stars": 1200,
+    "topics": [
+      "cli",
+      "tool",
+    ],
+    "updatedAt": "2025-05-29T00:00:00.000Z",
+    "url": "https://github.com/acme/repo-a",
+    "watchers": 50,
+  },
+  "rateLimit": {
+    "remaining": 59,
+    "resetAt": "2025-06-01T01:00:00.000Z",
+  },
+  "repository": "acme/repo-a",
+  "risk": {
+    "level": "low",
+    "reasons": [
+      "Permissive license.",
+      "Recent commits.",
+      "Clear README with usage.",
+      "Examples available.",
+      "Tests present.",
+      "CI configured.",
+    ],
+  },
+  "score": {
+    "adoption": 7.9,
+    "documentation": 15,
+    "integration": 10,
+    "license": 15,
+    "maintenance": 18.8,
+    "reasons": [
+      "Relevance 18/30",
+      "Maintenance 18.8/20",
+      "License 15/15 (low risk)",
+      "Documentation 15/15",
+      "Adoption 7.9/10",
+      "Integration 10/10",
+      "No query keywords provided; using neutral relevance.",
+    ],
+    "relevance": 18,
+    "total": 85,
+  },
+  "summary": "acme/repo-a: score 85/100, low risk. License: MIT License (permissive). 1200★/300 forks, last push 3d ago, docs 100/100. Top risk factor: Permissive license.",
+}
+`;
+
+exports[`oss_generate_integration_notes > produces install commands, important files, usage, steps, risks and a license reminder 1`] = `
+{
+  "basicUsage": "[untrusted — copied verbatim from the repository README; review before running]
+npm install demo",
+  "importantFiles": [
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "Dockerfile",
+    "examples/demo.ts",
+    "docs/guide.md",
+  ],
+  "installCommands": [
+    "npm install repo-a   # verify the exact package name on npm",
+    "git clone https://github.com/acme/repo-a.git",
+  ],
+  "integrationSteps": [
+    "Review the license (MIT License, permissive) for your "tooling" use case.",
+    "Install the dependency: npm install repo-a   # verify the exact package name on npm",
+    "Read the README and any docs/ for configuration and setup.",
+    "Study the examples/ directory for working integrations.",
+    "Integrate into your Node.js project via its public API.",
+    "Run the project's tests to validate your setup.",
+  ],
+  "licenseReminder": "This project is MIT License (permissive, low risk). Permissive license: broad commercial, modification and distribution rights with minimal obligations (typically attribution). Verify license obligations for your use case before shipping.",
+  "rateLimit": {
+    "remaining": 59,
+    "resetAt": "2025-06-01T01:00:00.000Z",
+  },
+  "repository": "acme/repo-a",
+  "risks": [
+    "Permissive license.",
+    "Recent commits.",
+    "Clear README with usage.",
+    "Examples available.",
+    "Tests present.",
+    "CI configured.",
+  ],
+  "targetStack": "Node.js",
+}
+`;

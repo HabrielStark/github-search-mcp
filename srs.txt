@@ -1,0 +1,1885 @@
+# SRS: OSS Research MCP Server
+
+## 1. Название проекта
+
+**OSS Research MCP**
+
+Альтернативные названия:
+
+* `oss-research-mcp`
+* `github-oss-mcp`
+* `open-source-finder-mcp`
+* `repo-scout-mcp`
+
+Рекомендуемое финальное имя:
+
+```text
+oss-research-mcp
+```
+
+## 2. Цель проекта
+
+Создать бесплатный open-source MCP-сервер, который предоставляет MCP tools для поиска, анализа, сравнения и отбора open-source GitHub-репозиториев.
+
+Сервер должен помогать находить бесплатные open-source альтернативы платным API, SDK, библиотекам, SaaS-инструментам и готовым решениям.
+
+Проект должен работать как независимый MCP-сервер и подключаться к любому MCP-compatible клиенту.
+
+## 3. Главная идея
+
+MCP-сервер предоставляет набор tools:
+
+```text
+search_repositories
+analyze_repository
+compare_repositories
+check_license
+read_repository_file
+get_repository_tree
+find_open_source_alternatives
+generate_integration_notes
+```
+
+Клиент вызывает эти tools, а MCP-сервер возвращает структурированный результат:
+
+```text
+- список подходящих репозиториев
+- краткое описание каждого
+- лицензия
+- активность проекта
+- качество документации
+- риски
+- сложность внедрения
+- итоговая рекомендация
+```
+
+## 4. Что проект НЕ должен делать
+
+Проект не должен:
+
+```text
+1. Быть отдельным coding agent.
+2. Запускать найденный код автоматически.
+3. Изменять пользовательские проекты.
+4. Требовать платные API.
+5. Требовать обязательную регистрацию.
+6. Хранить секреты пользователя в коде.
+7. Выполнять shell-команды без отдельного explicit режима.
+8. Клонировать огромные репозитории по умолчанию.
+9. Работать только под один IDE/клиент.
+10. Зависеть от конкретного AI-провайдера.
+```
+
+Это именно MCP-сервер.
+
+## 5. Бесплатность
+
+Проект должен быть бесплатным для пользователя.
+
+### 5.1 Бесплатные компоненты
+
+```text
+MCP-сервер: бесплатно
+GitHub public API: бесплатно
+Локальный кэш: бесплатно
+Локальный анализ README/package files/license: бесплатно
+DeepWiki adapter: бесплатно, но внешний remote service
+```
+
+### 5.2 GitHub token
+
+GitHub token должен быть optional.
+
+Без токена сервер должен работать с публичными репозиториями, но с меньшими лимитами.
+
+С токеном сервер должен иметь больше лимитов, но токен не должен быть обязательным.
+
+```env
+GITHUB_TOKEN=optional
+```
+
+## 6. Архитектура
+
+## 6.1 Общая схема
+
+```text
+MCP Client
+   |
+   | MCP protocol
+   |
+OSS Research MCP Server
+   |
+   |--- GitHub REST API Adapter
+   |--- Repository Analyzer
+   |--- License Analyzer
+   |--- Score Engine
+   |--- Cache Layer
+   |--- Optional DeepWiki Adapter
+   |
+Structured MCP Tool Results
+```
+
+## 6.2 Основные модули
+
+```text
+src/
+  server.ts
+  config.ts
+
+  tools/
+    searchRepositories.ts
+    analyzeRepository.ts
+    compareRepositories.ts
+    checkLicense.ts
+    readRepositoryFile.ts
+    getRepositoryTree.ts
+    findAlternatives.ts
+    generateIntegrationNotes.ts
+    healthCheck.ts
+
+  adapters/
+    githubClient.ts
+    deepwikiClient.ts
+
+  analyzers/
+    repositoryAnalyzer.ts
+    licenseAnalyzer.ts
+    packageAnalyzer.ts
+    documentationAnalyzer.ts
+    maintenanceAnalyzer.ts
+    riskAnalyzer.ts
+
+  scoring/
+    scoreEngine.ts
+    scoreWeights.ts
+
+  cache/
+    cacheStore.ts
+    sqliteCacheStore.ts
+    memoryCacheStore.ts
+
+  types/
+    repository.ts
+    analysis.ts
+    license.ts
+    score.ts
+    toolResults.ts
+
+  utils/
+    rateLimit.ts
+    sanitize.ts
+    errors.ts
+    logger.ts
+```
+
+## 7. Технологический стек
+
+## 7.1 Основной язык
+
+Рекомендуемый язык:
+
+```text
+TypeScript
+```
+
+Причина:
+
+```text
+- удобно публиковать через npm
+- удобно запускать через npx
+- хорошая совместимость с MCP-клиентами
+- простая установка для пользователей
+```
+
+## 7.2 Runtime
+
+```text
+Node.js 20+
+```
+
+## 7.3 Package manager
+
+```text
+pnpm
+```
+
+Допустимо:
+
+```text
+npm
+yarn
+bun
+```
+
+Но основной dev workflow должен быть через `pnpm`.
+
+## 7.4 MCP SDK
+
+Использовать официальный TypeScript SDK для MCP.
+
+## 7.5 HTTP-клиент
+
+```text
+undici
+```
+
+или встроенный `fetch` в Node.js.
+
+## 7.6 Кэш
+
+MVP:
+
+```text
+in-memory cache
+```
+
+Production version:
+
+```text
+SQLite cache
+```
+
+Рекомендуемая библиотека:
+
+```text
+better-sqlite3
+```
+
+## 8. Transport modes
+
+MCP-сервер должен поддерживать:
+
+## 8.1 STDIO transport
+
+Обязательный режим.
+
+```text
+stdio
+```
+
+Используется для локального подключения.
+
+## 8.2 Streamable HTTP transport
+
+Опциональный режим.
+
+```text
+http://localhost:PORT/mcp
+```
+
+Нужен для клиентов, которым удобнее HTTP transport.
+
+## 9. Конфигурация
+
+Сервер должен конфигурироваться через environment variables и optional config file.
+
+## 9.1 Environment variables
+
+```env
+GITHUB_TOKEN=
+OSS_MCP_TRANSPORT=stdio
+OSS_MCP_PORT=7345
+OSS_MCP_CACHE_ENABLED=true
+OSS_MCP_CACHE_PATH=~/.oss-research-mcp/cache.sqlite
+OSS_MCP_CACHE_TTL_HOURS=24
+OSS_MCP_DEEPWIKI_ENABLED=false
+OSS_MCP_MAX_RESULTS=20
+OSS_MCP_REQUEST_TIMEOUT_MS=15000
+OSS_MCP_LOG_LEVEL=info
+```
+
+## 9.2 Config file
+
+Optional config path:
+
+```text
+~/.oss-research-mcp/config.json
+```
+
+Example:
+
+```json
+{
+  "githubTokenEnv": "GITHUB_TOKEN",
+  "cache": {
+    "enabled": true,
+    "ttlHours": 24
+  },
+  "deepwiki": {
+    "enabled": false
+  },
+  "limits": {
+    "maxSearchResults": 20,
+    "maxFilesToInspect": 30,
+    "maxReadmeChars": 50000
+  }
+}
+```
+
+## 10. MCP capabilities
+
+## 10.1 Tools
+
+MVP должен отдавать только tools.
+
+Resources и prompts можно добавить позже.
+
+## 10.2 Resources
+
+Optional v2 feature.
+
+Примеры resources:
+
+```text
+oss://cache/reports/{reportId}
+oss://repo/{owner}/{repo}/profile
+oss://repo/{owner}/{repo}/license
+```
+
+## 10.3 Prompts
+
+Не нужны для MVP.
+
+Можно добавить позже как optional templates.
+
+## 11. MCP tools
+
+# 11.1 Tool: `search_repositories`
+
+## Назначение
+
+Ищет GitHub repositories по запросу.
+
+## Input schema
+
+```json
+{
+  "query": "string",
+  "language": "string | optional",
+  "minStars": "number | optional",
+  "license": "string | optional",
+  "topic": "string | optional",
+  "sort": "stars | updated | forks | best-match",
+  "order": "asc | desc",
+  "limit": "number"
+}
+```
+
+## Output
+
+```json
+{
+  "query": "string",
+  "totalCount": "number",
+  "items": [
+    {
+      "fullName": "owner/repo",
+      "name": "repo",
+      "owner": "owner",
+      "description": "string",
+      "url": "string",
+      "stars": "number",
+      "forks": "number",
+      "openIssues": "number",
+      "language": "string",
+      "license": "string | null",
+      "archived": "boolean",
+      "pushedAt": "ISO date",
+      "topics": ["string"]
+    }
+  ],
+  "rateLimit": {
+    "remaining": "number | null",
+    "resetAt": "ISO date | null"
+  }
+}
+```
+
+# 11.2 Tool: `get_repository_profile`
+
+## Назначение
+
+Возвращает базовый профиль репозитория.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "description": "string",
+  "url": "string",
+  "defaultBranch": "string",
+  "stars": "number",
+  "forks": "number",
+  "watchers": "number",
+  "openIssues": "number",
+  "language": "string",
+  "topics": ["string"],
+  "license": "string | null",
+  "createdAt": "ISO date",
+  "updatedAt": "ISO date",
+  "pushedAt": "ISO date",
+  "archived": "boolean",
+  "disabled": "boolean",
+  "sizeKb": "number"
+}
+```
+
+# 11.3 Tool: `get_repository_tree`
+
+## Назначение
+
+Возвращает структуру файлов репозитория.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "branch": "string | optional",
+  "recursive": "boolean",
+  "maxFiles": "number"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "branch": "string",
+  "files": [
+    {
+      "path": "string",
+      "type": "file | dir",
+      "size": "number | null",
+      "sha": "string"
+    }
+  ],
+  "truncated": "boolean"
+}
+```
+
+# 11.4 Tool: `read_repository_file`
+
+## Назначение
+
+Читает конкретный файл из репозитория.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "path": "string",
+  "branch": "string | optional",
+  "maxChars": "number | optional"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "path": "string",
+  "branch": "string",
+  "content": "string",
+  "encoding": "utf-8",
+  "truncated": "boolean"
+}
+```
+
+## Ограничение
+
+По умолчанию нельзя читать бинарные файлы.
+
+Запрещённые расширения:
+
+```text
+.png
+.jpg
+.jpeg
+.gif
+.webp
+.mp4
+.mov
+.zip
+tar
+gz
+exe
+dll
+so
+dylib
+```
+
+# 11.5 Tool: `get_readme`
+
+## Назначение
+
+Возвращает README репозитория.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "maxChars": "number | optional"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "readmePath": "string",
+  "content": "string",
+  "truncated": "boolean"
+}
+```
+
+# 11.6 Tool: `check_license`
+
+## Назначение
+
+Проверяет лицензию репозитория и объясняет риски использования.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "licenseDetected": "string | null",
+  "spdxId": "string | null",
+  "category": "permissive | weak-copyleft | strong-copyleft | unknown | none",
+  "commercialUse": "yes | no | unclear",
+  "modification": "yes | no | unclear",
+  "distribution": "yes | no | unclear",
+  "privateUse": "yes | no | unclear",
+  "riskLevel": "low | medium | high | unknown",
+  "notes": ["string"]
+}
+```
+
+## License categories
+
+```text
+Permissive:
+- MIT
+- Apache-2.0
+- BSD-2-Clause
+- BSD-3-Clause
+- ISC
+
+Weak copyleft:
+- MPL-2.0
+- LGPL
+
+Strong copyleft:
+- GPL
+- AGPL
+```
+
+# 11.7 Tool: `analyze_repository`
+
+## Назначение
+
+Проводит полный анализ одного репозитория.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "includeReadme": "boolean",
+  "includeTree": "boolean",
+  "includeLicense": "boolean",
+  "includePackageFiles": "boolean",
+  "includeDeepWiki": "boolean"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "profile": {},
+  "license": {},
+  "documentation": {
+    "hasReadme": "boolean",
+    "hasExamples": "boolean",
+    "hasDocsFolder": "boolean",
+    "hasInstallSection": "boolean",
+    "hasUsageSection": "boolean",
+    "score": "number"
+  },
+  "maintenance": {
+    "lastPushDaysAgo": "number",
+    "openIssues": "number",
+    "stars": "number",
+    "forks": "number",
+    "archived": "boolean",
+    "score": "number"
+  },
+  "packageSignals": {
+    "detectedPackageManagers": ["npm", "pip", "cargo", "go", "maven"],
+    "hasTests": "boolean",
+    "hasCI": "boolean",
+    "hasDockerfile": "boolean",
+    "hasExamples": "boolean"
+  },
+  "risk": {
+    "level": "low | medium | high",
+    "reasons": ["string"]
+  },
+  "score": {
+    "total": "number",
+    "breakdown": {}
+  },
+  "summary": "string"
+}
+```
+
+# 11.8 Tool: `compare_repositories`
+
+## Назначение
+
+Сравнивает несколько репозиториев по единой системе оценки.
+
+## Input schema
+
+```json
+{
+  "repositories": ["owner/repo"],
+  "criteria": {
+    "preferPermissiveLicense": "boolean",
+    "preferActiveMaintenance": "boolean",
+    "preferEasyIntegration": "boolean",
+    "preferPopular": "boolean",
+    "language": "string | optional"
+  }
+}
+```
+
+## Output
+
+```json
+{
+  "winner": "owner/repo",
+  "ranking": [
+    {
+      "repository": "owner/repo",
+      "score": "number",
+      "pros": ["string"],
+      "cons": ["string"],
+      "licenseRisk": "low | medium | high",
+      "maintenanceRisk": "low | medium | high",
+      "integrationDifficulty": "easy | medium | hard"
+    }
+  ],
+  "summary": "string"
+}
+```
+
+# 11.9 Tool: `find_open_source_alternatives`
+
+## Назначение
+
+Главный tool проекта.
+
+Ищет open-source альтернативы для указанной задачи, сервиса, API или библиотеки.
+
+## Input schema
+
+```json
+{
+  "target": "string",
+  "useCase": "string",
+  "language": "string | optional",
+  "framework": "string | optional",
+  "mustBeFree": "boolean",
+  "mustBeSelfHosted": "boolean",
+  "licensePreference": "permissive | any | avoid-strong-copyleft",
+  "limit": "number"
+}
+```
+
+## Output
+
+```json
+{
+  "target": "string",
+  "useCase": "string",
+  "candidates": [
+    {
+      "repository": "owner/repo",
+      "url": "string",
+      "description": "string",
+      "whyRelevant": "string",
+      "score": "number",
+      "license": "string | null",
+      "riskLevel": "low | medium | high",
+      "integrationDifficulty": "easy | medium | hard"
+    }
+  ],
+  "bestCandidate": "owner/repo | null",
+  "rejectedCandidates": [
+    {
+      "repository": "owner/repo",
+      "reason": "string"
+    }
+  ],
+  "notes": ["string"]
+}
+```
+
+# 11.10 Tool: `generate_integration_notes`
+
+## Назначение
+
+Создаёт краткие технические заметки по внедрению выбранного open-source проекта.
+
+Важно: tool не должен изменять файлы пользователя. Он только возвращает инструкцию.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "targetStack": "string",
+  "useCase": "string"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "targetStack": "string",
+  "installCommands": ["string"],
+  "importantFiles": ["string"],
+  "basicUsage": "string",
+  "integrationSteps": ["string"],
+  "risks": ["string"],
+  "licenseReminder": "string"
+}
+```
+
+# 11.11 Tool: `deepwiki_summary`
+
+## Назначение
+
+Optional tool.
+
+Использует DeepWiki для быстрого понимания публичного репозитория.
+
+Должен быть выключен по умолчанию.
+
+## Input schema
+
+```json
+{
+  "repository": "owner/repo",
+  "question": "string | optional"
+}
+```
+
+## Output
+
+```json
+{
+  "repository": "owner/repo",
+  "available": "boolean",
+  "summary": "string",
+  "topics": ["string"],
+  "source": "deepwiki"
+}
+```
+
+## 12. Алгоритм поиска альтернатив
+
+## 12.1 Input
+
+Пример:
+
+```json
+{
+  "target": "Stripe",
+  "useCase": "payment processing for a small SaaS",
+  "mustBeFree": true,
+  "mustBeSelfHosted": true,
+  "licensePreference": "avoid-strong-copyleft"
+}
+```
+
+## 12.2 Query generation
+
+Сервер должен создать несколько GitHub search queries:
+
+```text
+stripe alternative open source
+self hosted payment processing
+open source billing system
+payment gateway sdk
+saas billing open source
+```
+
+Если указан язык:
+
+```text
+language:TypeScript
+language:Python
+```
+
+Если нужен self-hosted:
+
+```text
+topic:self-hosted
+```
+
+## 12.3 Candidate collection
+
+Сервер должен собрать кандидатов из GitHub Search API.
+
+Фильтры:
+
+```text
+- не archived
+- не disabled
+- stars выше минимального порога, если указан
+- pushed_at не слишком старый, если есть активные альтернативы
+- license exists, если strict mode
+```
+
+## 12.4 Enrichment
+
+Для каждого кандидата получить:
+
+```text
+- repository profile
+- README
+- license
+- file tree
+- package files
+- topics
+- last push date
+- open issues count
+```
+
+## 12.5 Scoring
+
+Каждый репозиторий получает оценку от 0 до 100.
+
+## 13. Scoring engine
+
+## 13.1 Default weights
+
+```text
+Relevance: 30
+Maintenance: 20
+License safety: 15
+Documentation: 15
+Adoption: 10
+Integration simplicity: 10
+```
+
+Total:
+
+```text
+100
+```
+
+## 13.2 Relevance score
+
+Оценивается по:
+
+```text
+- совпадению query с name/description/topics
+- совпадению use case с README
+- наличию нужных keywords
+- наличию примеров использования
+```
+
+## 13.3 Maintenance score
+
+Оценивается по:
+
+```text
+- pushed_at
+- updated_at
+- archived=false
+- open issues ratio
+- recent releases, если доступны
+- CI files
+```
+
+## 13.4 License score
+
+```text
+MIT / Apache / BSD / ISC: high
+MPL / LGPL: medium
+GPL: medium-risk
+AGPL: high-risk for SaaS
+No license: high-risk
+Unknown license: high-risk
+```
+
+## 13.5 Documentation score
+
+```text
+README exists: +20
+Install section: +20
+Usage section: +20
+Examples folder: +20
+Docs folder/site: +20
+```
+
+## 13.6 Adoption score
+
+Оценивается по:
+
+```text
+- stars
+- forks
+- contributors, если доступно
+- package ecosystem signals
+```
+
+Stars не должны быть единственным главным фактором.
+
+## 13.7 Integration simplicity score
+
+Оценивается по:
+
+```text
+- package manager file exists
+- clear install command exists
+- examples exist
+- Dockerfile exists
+- minimal required services
+- no heavy infrastructure requirement
+```
+
+## 14. Data models
+
+## 14.1 `RepositoryCandidate`
+
+```ts
+type RepositoryCandidate = {
+  fullName: string;
+  owner: string;
+  name: string;
+  url: string;
+  description: string | null;
+  stars: number;
+  forks: number;
+  openIssues: number;
+  language: string | null;
+  topics: string[];
+  license: string | null;
+  archived: boolean;
+  disabled: boolean;
+  pushedAt: string | null;
+  updatedAt: string | null;
+};
+```
+
+## 14.2 `LicenseReport`
+
+```ts
+type LicenseReport = {
+  repository: string;
+  detected: string | null;
+  spdxId: string | null;
+  category: "permissive" | "weak-copyleft" | "strong-copyleft" | "unknown" | "none";
+  commercialUse: "yes" | "no" | "unclear";
+  privateUse: "yes" | "no" | "unclear";
+  modification: "yes" | "no" | "unclear";
+  distribution: "yes" | "no" | "unclear";
+  riskLevel: "low" | "medium" | "high" | "unknown";
+  notes: string[];
+};
+```
+
+## 14.3 `RepositoryAnalysis`
+
+```ts
+type RepositoryAnalysis = {
+  repository: string;
+  profile: RepositoryCandidate;
+  license: LicenseReport;
+  documentation: DocumentationReport;
+  maintenance: MaintenanceReport;
+  packageSignals: PackageSignals;
+  risk: RiskReport;
+  score: ScoreReport;
+  summary: string;
+};
+```
+
+## 14.4 `ScoreReport`
+
+```ts
+type ScoreReport = {
+  total: number;
+  relevance: number;
+  maintenance: number;
+  license: number;
+  documentation: number;
+  adoption: number;
+  integration: number;
+  reasons: string[];
+};
+```
+
+## 15. Functional requirements
+
+## FR-001: MCP server startup
+
+Сервер должен запускаться через CLI command:
+
+```bash
+oss-research-mcp
+```
+
+Или через npm:
+
+```bash
+npx oss-research-mcp
+```
+
+## FR-002: STDIO mode
+
+Сервер должен поддерживать STDIO transport по умолчанию.
+
+## FR-003: HTTP mode
+
+Сервер должен поддерживать optional Streamable HTTP mode:
+
+```bash
+oss-research-mcp --transport http --port 7345
+```
+
+## FR-004: GitHub search
+
+Сервер должен уметь искать публичные GitHub репозитории по query.
+
+## FR-005: GitHub repository metadata
+
+Сервер должен получать metadata репозитория:
+
+```text
+name
+description
+stars
+forks
+language
+topics
+license
+issues
+created_at
+updated_at
+pushed_at
+archived
+disabled
+default_branch
+```
+
+## FR-006: README extraction
+
+Сервер должен уметь читать README.
+
+## FR-007: File tree extraction
+
+Сервер должен уметь получать file tree репозитория.
+
+## FR-008: File reading
+
+Сервер должен уметь читать выбранный текстовый файл.
+
+## FR-009: License detection
+
+Сервер должен определять лицензию репозитория и классифицировать риск.
+
+## FR-010: Repository analysis
+
+Сервер должен выполнять комплексный анализ одного репозитория.
+
+## FR-011: Repository comparison
+
+Сервер должен сравнивать несколько репозиториев и возвращать ranking.
+
+## FR-012: Alternative search
+
+Сервер должен находить open-source альтернативы под задачу пользователя.
+
+## FR-013: Caching
+
+Сервер должен кэшировать ответы GitHub API.
+
+## FR-014: Rate-limit handling
+
+Сервер должен отслеживать GitHub rate limit headers и возвращать информацию в output.
+
+## FR-015: DeepWiki optional adapter
+
+Сервер должен иметь optional adapter для DeepWiki.
+
+По умолчанию:
+
+```env
+OSS_MCP_DEEPWIKI_ENABLED=false
+```
+
+## FR-016: No paid dependency
+
+MVP не должен требовать платные API.
+
+## FR-017: No automatic code execution
+
+Сервер не должен выполнять код из найденных репозиториев.
+
+## FR-018: Safe logging
+
+В STDIO mode сервер не должен писать обычные logs в stdout.
+
+Logs должны идти в stderr или файл.
+
+## FR-019: Token safety
+
+GitHub token должен читаться только из environment variable.
+
+Запрещено:
+
+```text
+- писать token в logs
+- возвращать token в tool output
+- хранить token в cache
+```
+
+## FR-020: Structured errors
+
+Все ошибки должны возвращаться структурировано:
+
+```json
+{
+  "error": {
+    "code": "RATE_LIMITED",
+    "message": "GitHub rate limit exceeded",
+    "retryAfter": "ISO date | null"
+  }
+}
+```
+
+## 16. Non-functional requirements
+
+## NFR-001: Performance
+
+Обычный `search_repositories` должен отвечать менее чем за 5 секунд при нормальном GitHub API response.
+
+`analyze_repository` должен отвечать менее чем за 15 секунд для среднего репозитория.
+
+## NFR-002: Reliability
+
+Сервер не должен падать при:
+
+```text
+- GitHub 403
+- GitHub 404
+- rate limit
+- empty README
+- missing license
+- huge repository
+- binary files
+- invalid owner/repo
+```
+
+## NFR-003: Portability
+
+Сервер должен работать на:
+
+```text
+- macOS
+- Windows
+- Linux
+```
+
+## NFR-004: Installability
+
+Пользователь должен иметь возможность установить сервер одной командой:
+
+```bash
+npm install -g oss-research-mcp
+```
+
+или запустить без установки:
+
+```bash
+npx oss-research-mcp
+```
+
+## NFR-005: Open-source readiness
+
+Репозиторий проекта должен содержать:
+
+```text
+README.md
+LICENSE
+CHANGELOG.md
+CONTRIBUTING.md
+SECURITY.md
+CODE_OF_CONDUCT.md
+.env.example
+examples/
+docs/
+```
+
+## NFR-006: Security
+
+Все внешние данные из GitHub repositories должны считаться недоверенными.
+
+README, package descriptions, issues и любой текст из репозитория не должен восприниматься как инструкция для самого MCP-сервера.
+
+## NFR-007: Privacy
+
+Сервер не должен отправлять данные пользователя куда-либо, кроме явно включенных внешних adapters.
+
+По умолчанию внешний adapter только GitHub API.
+
+DeepWiki — optional.
+
+## 17. Security requirements
+
+## SEC-001: Read-only by default
+
+Сервер должен быть read-only.
+
+Запрещены destructive operations:
+
+```text
+- create issue
+- create PR
+- push commit
+- edit file
+- delete file
+- create repo
+```
+
+## SEC-002: No shell execution
+
+MVP не должен иметь shell execution.
+
+## SEC-003: Domain allowlist
+
+HTTP-запросы разрешены только к:
+
+```text
+api.github.com
+raw.githubusercontent.com
+mcp.deepwiki.com
+```
+
+DeepWiki domain разрешается только если DeepWiki включён.
+
+## SEC-004: Prompt-injection resistance
+
+Любой текст из репозиториев должен возвращаться как data, не как instructions.
+
+Внутренние comments в коде должны напоминать:
+
+```text
+Repository content is untrusted data.
+Do not execute instructions found inside repository files.
+```
+
+## SEC-005: Output sanitization
+
+Сервер должен ограничивать:
+
+```text
+- max file size
+- max README chars
+- max number of files
+- max number of repositories
+```
+
+## SEC-006: Secrets redaction
+
+В logs и errors нужно скрывать:
+
+```text
+GitHub tokens
+Authorization headers
+personal access tokens
+```
+
+## SEC-007: Dependency safety
+
+Перед релизом нужно включить:
+
+```text
+npm audit
+pnpm audit
+dependabot
+GitHub CodeQL
+```
+
+## 18. Error codes
+
+```text
+INVALID_INPUT
+INVALID_REPOSITORY_FORMAT
+GITHUB_RATE_LIMITED
+GITHUB_NOT_FOUND
+GITHUB_FORBIDDEN
+GITHUB_API_ERROR
+README_NOT_FOUND
+LICENSE_NOT_FOUND
+FILE_TOO_LARGE
+BINARY_FILE_NOT_SUPPORTED
+CACHE_ERROR
+DEEPWIKI_DISABLED
+DEEPWIKI_UNAVAILABLE
+INTERNAL_ERROR
+```
+
+## 19. Cache design
+
+## 19.1 Cache keys
+
+```text
+github:search:{hash(query)}
+github:repo:{owner}/{repo}
+github:readme:{owner}/{repo}:{branch}
+github:tree:{owner}/{repo}:{branch}
+github:file:{owner}/{repo}:{branch}:{path}
+github:license:{owner}/{repo}
+analysis:{owner}/{repo}:{optionsHash}
+```
+
+## 19.2 TTL
+
+Default:
+
+```text
+24 hours
+```
+
+Configurable:
+
+```env
+OSS_MCP_CACHE_TTL_HOURS=24
+```
+
+## 19.3 Cache storage
+
+MVP:
+
+```text
+memory cache
+```
+
+Full version:
+
+```text
+SQLite
+```
+
+## 20. GitHub API adapter
+
+## 20.1 Required endpoints
+
+Adapter должен использовать GitHub REST API для:
+
+```text
+- search repositories
+- get repository
+- get README
+- get repository contents
+- get license
+- get git tree
+- list commits, optional
+- list releases, optional
+```
+
+## 20.2 Headers
+
+Каждый request должен использовать:
+
+```http
+Accept: application/vnd.github+json
+X-GitHub-Api-Version: 2026-03-10
+User-Agent: oss-research-mcp
+```
+
+Если token есть:
+
+```http
+Authorization: Bearer <GITHUB_TOKEN>
+```
+
+## 20.3 Rate limit handling
+
+Adapter должен читать headers:
+
+```text
+x-ratelimit-limit
+x-ratelimit-remaining
+x-ratelimit-used
+x-ratelimit-reset
+```
+
+Если remaining близко к нулю, tool output должен включать warning.
+
+## 21. DeepWiki adapter
+
+## 21.1 Status
+
+Optional.
+
+Не должен быть обязательным для MVP.
+
+## 21.2 Purpose
+
+Используется только для дополнительной summary-информации по публичным репозиториям.
+
+## 21.3 Default
+
+Disabled.
+
+```env
+OSS_MCP_DEEPWIKI_ENABLED=false
+```
+
+## 21.4 Failure behavior
+
+Если DeepWiki недоступен, основной GitHub-анализ должен продолжать работать.
+
+Ошибка DeepWiki не должна ломать весь tool call.
+
+## 22. Repository risk analysis
+
+Сервер должен помечать risks.
+
+## 22.1 High risk
+
+```text
+- no license
+- archived repository
+- last push older than 24 months
+- no README
+- no usage example
+- very many unresolved issues
+- AGPL license for SaaS use case
+- unclear install process
+```
+
+## 22.2 Medium risk
+
+```text
+- GPL license
+- weak documentation
+- low activity
+- few stars/forks
+- no recent release
+```
+
+## 22.3 Low risk
+
+```text
+- permissive license
+- recent commits
+- clear README
+- examples exist
+- tests exist
+- CI exists
+- active issues/PR activity
+```
+
+## 23. Documentation analyzer
+
+Сервер должен проверять наличие:
+
+```text
+README.md
+docs/
+examples/
+CHANGELOG
+CONTRIBUTING
+SECURITY
+package manager files
+Dockerfile
+.github/workflows
+tests/
+```
+
+Package manager files:
+
+```text
+package.json
+pyproject.toml
+requirements.txt
+Cargo.toml
+go.mod
+pom.xml
+build.gradle
+composer.json
+Gemfile
+```
+
+## 24. Output style requirements
+
+Tool outputs должны быть:
+
+```text
+- короткими
+- структурированными
+- machine-readable
+- без лишнего текста
+- с явными risk/recommendation fields
+```
+
+Запрещено возвращать огромные полотна текста без структуры.
+
+## 25. CLI requirements
+
+## 25.1 Help
+
+```bash
+oss-research-mcp --help
+```
+
+Должно показать:
+
+```text
+Usage:
+  oss-research-mcp [options]
+
+Options:
+  --transport stdio|http
+  --port <number>
+  --cache true|false
+  --deepwiki true|false
+  --log-level debug|info|warn|error
+```
+
+## 25.2 Version
+
+```bash
+oss-research-mcp --version
+```
+
+Должно вернуть version из `package.json`.
+
+## 26. MCP server metadata
+
+Server name:
+
+```text
+oss-research-mcp
+```
+
+Server description:
+
+```text
+MCP server for discovering, analyzing, comparing, and selecting open-source GitHub repositories.
+```
+
+## 27. Tool naming convention
+
+Все tools должны иметь prefix:
+
+```text
+oss_
+```
+
+Финальный список:
+
+```text
+oss_search_repositories
+oss_get_repository_profile
+oss_get_repository_tree
+oss_read_repository_file
+oss_get_readme
+oss_check_license
+oss_analyze_repository
+oss_compare_repositories
+oss_find_open_source_alternatives
+oss_generate_integration_notes
+oss_deepwiki_summary
+oss_health_check
+```
+
+## 28. Testing requirements
+
+## 28.1 Unit tests
+
+Покрыть:
+
+```text
+- query builder
+- license analyzer
+- score engine
+- risk analyzer
+- cache layer
+- input validation
+- error handling
+```
+
+## 28.2 Integration tests
+
+Покрыть:
+
+```text
+- GitHub API mocked responses
+- rate limit response
+- repository not found
+- missing README
+- missing license
+- huge file rejection
+```
+
+## 28.3 MCP protocol tests
+
+Проверить:
+
+```text
+- tools/list
+- tools/call
+- invalid arguments
+- structured errors
+```
+
+## 28.4 Manual testing
+
+Использовать MCP Inspector.
+
+## 29. Acceptance criteria
+
+Проект считается готовым, если:
+
+```text
+1. MCP-сервер запускается через npx.
+2. MCP-сервер показывает список tools.
+3. search_repositories возвращает реальные GitHub repositories.
+4. analyze_repository возвращает structured analysis.
+5. compare_repositories выбирает лучший repo по scoring.
+6. check_license правильно классифицирует MIT, Apache, GPL, AGPL, unknown.
+7. find_open_source_alternatives возвращает ranked candidates.
+8. Сервер работает без GitHub token.
+9. Сервер работает лучше с GitHub token.
+10. Сервер не использует платные API.
+11. Сервер не выполняет код из репозиториев.
+12. Сервер имеет README, LICENSE, SECURITY, CONTRIBUTING.
+13. Сервер можно выложить на GitHub как open-source.
+```
+
+## 30. README requirements
+
+README должен содержать:
+
+```text
+- что делает проект
+- зачем нужен
+- быстрый старт
+- установка через npm/npx
+- подключение в MCP-compatible client
+- список tools
+- примеры tool calls
+- env variables
+- лимиты GitHub API
+- security notes
+- license explanation
+- contribution guide
+```
+
+## 31. License проекта
+
+Рекомендуемая лицензия:
+
+```text
+MIT
+```
+
+Причина:
+
+```text
+- максимально простая
+- удобная для open-source
+- удобная для коммерческого использования
+- меньше юридических ограничений для пользователей
+```
+
+Альтернатива:
+
+```text
+Apache-2.0
+```
+
+Если важнее patent protection.
+
+## 32. GitHub repository setup
+
+Репозиторий должен иметь структуру:
+
+```text
+oss-research-mcp/
+  README.md
+  LICENSE
+  SECURITY.md
+  CONTRIBUTING.md
+  CODE_OF_CONDUCT.md
+  CHANGELOG.md
+  package.json
+  pnpm-lock.yaml
+  tsconfig.json
+  .env.example
+  .gitignore
+  src/
+  tests/
+  docs/
+  examples/
+  .github/
+    workflows/
+      test.yml
+      release.yml
+    ISSUE_TEMPLATE/
+    PULL_REQUEST_TEMPLATE.md
+```
+
+## 33. GitHub Actions
+
+## 33.1 Test workflow
+
+На каждый push/PR:
+
+```text
+- install dependencies
+- run lint
+- run typecheck
+- run tests
+- run build
+```
+
+## 33.2 Release workflow
+
+На tag:
+
+```text
+- run tests
+- build
+- publish to npm
+- create GitHub release
+```
+
+## 34. MVP scope
+
+## MVP v0.1.0
+
+Включить:
+
+```text
+- STDIO MCP server
+- GitHub search
+- repository profile
+- README reader
+- license checker
+- repository tree
+- repository analyzer
+- compare repositories
+- basic scoring
+- memory cache
+- docs
+```
+
+Не включать:
+
+```text
+- DeepWiki
+- HTTP transport
+- SQLite cache
+- resources
+- prompts
+```
+
+## v0.2.0
+
+Добавить:
+
+```text
+- DeepWiki optional adapter
+- Streamable HTTP transport
+- SQLite cache
+- better risk analysis
+- examples
+```
+
+## v0.3.0
+
+Добавить:
+
+```text
+- MCP resources
+- saved reports
+- advanced package ecosystem analysis
+- release analysis
+- dependency file parsing
+```
+
+## v1.0.0
+
+Стабильная версия:
+
+```text
+- full tool set
+- stable schemas
+- docs complete
+- npm package
+- GitHub release
+- security policy
+- contribution guide
+```
+
+## 35. Final product definition
+
+Финальный продукт — это open-source MCP-сервер, который любой пользователь может установить и подключить к MCP-compatible среде.
+
+Он должен давать готовые tools для GitHub/open-source research:
+
+```text
+- найти репозитории
+- проверить качество
+- проверить лицензию
+- сравнить варианты
+- выбрать лучший
+- дать понятные технические notes
+```
+
+Главный принцип:
+
+```text
+No paid API required.
+No vendor lock-in.
+Read-only by default.
+Open-source first.
+Safe structured MCP tools.
+```

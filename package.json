@@ -1,0 +1,100 @@
+{
+  "name": "oss-research-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for discovering, analyzing, comparing, and selecting open-source GitHub repositories.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "github",
+    "open-source",
+    "oss",
+    "license",
+    "repository-analysis",
+    "alternatives"
+  ],
+  "license": "MIT",
+  "author": "OSS Research MCP contributors",
+  "homepage": "https://github.com/HabrielStark/github-search-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HabrielStark/github-search-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HabrielStark/github-search-mcp/issues"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "type": "module",
+  "bin": {
+    "oss-research-mcp": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs",
+    "demo",
+    "examples",
+    "scripts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    ".env.example"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "vitest run -c vitest.live.config.ts",
+    "test:mutation": "stryker run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "zod": "4.4.3"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "12.10.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ],
+    "overrides": {
+      "hono": "4.12.25",
+      "qs@>=6.11.1 <=6.15.1": "6.15.2",
+      "vite": "8.0.16"
+    }
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "9.6.1",
+    "@stryker-mutator/vitest-runner": "9.6.1",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "25.9.1",
+    "@vitest/coverage-v8": "4.1.7",
+    "eslint": "10.4.1",
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.60.0",
+    "vite": "8.0.16",
+    "vitest": "4.1.7"
+  }
+}
