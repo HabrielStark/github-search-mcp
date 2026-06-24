@@ -14,7 +14,7 @@ This directory contains the public user-experience demo for GitHub Search MCP:
 
 Watch the videos in the hosted browser page:
 
-https://habrielstark.github.io/github-search-mcp/
+https://htmlpreview.github.io/?https://github.com/HabrielStark/github-search-mcp/blob/main/demo/index.html
 
 | Project pitch                                                          | Setup walkthrough                                                          |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------------- |

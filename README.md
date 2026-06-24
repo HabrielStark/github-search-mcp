@@ -3,7 +3,7 @@
 # GitHub Search MCP
 
 <p align="center">
-  <a href="https://habrielstark.github.io/github-search-mcp/">Watch demo</a> |
+  <a href="https://htmlpreview.github.io/?https://github.com/HabrielStark/github-search-mcp/blob/main/demo/index.html">Watch demo</a> |
   <a href="#demo-videos">Preview GIFs</a> |
   <a href="demo/README.md">Source files</a> |
   <a href="DESIGN.md">Design system</a> |
@@ -42,7 +42,7 @@ previews below are animated GIFs, so they play directly inside the GitHub README
 without forcing a file download.
 
 <p align="center">
-  <a href="https://habrielstark.github.io/github-search-mcp/"><strong>Watch the browser demo</strong></a>
+  <a href="https://htmlpreview.github.io/?https://github.com/HabrielStark/github-search-mcp/blob/main/demo/index.html"><strong>Watch the browser demo</strong></a>
   &nbsp;|&nbsp;
   <a href="demo/index.html">Demo page source</a>
 </p>
