@@ -16,9 +16,15 @@ DEMO_ASSETS = DEMO / "assets"
 LOGO_512 = DEMO_ASSETS / "github-search-logo-512.png"
 BRAND_LOGO = ASSETS / "github-search-mcp-logo.png"
 README_HERO = ASSETS / "github-search-mcp-readme-hero.png"
-DEMO_MP4 = DEMO / "github-search-mcp-demo.mp4"
-MEDIA_MP4 = MEDIA / "github-search-mcp-walkthrough.mp4"
-MEDIA_GIF = MEDIA / "github-search-mcp-walkthrough-preview.gif"
+PITCH_DEMO_MP4 = DEMO / "github-search-mcp-pitch.mp4"
+SETUP_DEMO_MP4 = DEMO / "github-search-mcp-setup.mp4"
+LEGACY_DEMO_MP4 = DEMO / "github-search-mcp-demo.mp4"
+PITCH_MEDIA_MP4 = MEDIA / "github-search-mcp-pitch.mp4"
+SETUP_MEDIA_MP4 = MEDIA / "github-search-mcp-setup.mp4"
+LEGACY_MEDIA_MP4 = MEDIA / "github-search-mcp-walkthrough.mp4"
+PITCH_MEDIA_GIF = MEDIA / "github-search-mcp-pitch-preview.gif"
+SETUP_MEDIA_GIF = MEDIA / "github-search-mcp-setup-preview.gif"
+LEGACY_MEDIA_GIF = MEDIA / "github-search-mcp-walkthrough-preview.gif"
 
 W, H = 1400, 430
 BG = "#0d1117"
@@ -103,13 +109,10 @@ def render_hero() -> None:
     img.save(README_HERO)
 
 
-def render_media() -> None:
-    if not DEMO_MP4.exists():
-        raise FileNotFoundError(f"Missing demo video: {DEMO_MP4}")
-    shutil.copy2(DEMO_MP4, MEDIA_MP4)
+def render_gif(source: Path, target: Path, seconds: int = 8) -> None:
     if shutil.which("ffmpeg") is None:
         raise RuntimeError("ffmpeg is required to render GIF preview")
-    palette = MEDIA / "palette.png"
+    palette = MEDIA / f"{target.stem}-palette.png"
     subprocess.run(
         [
             "ffmpeg",
@@ -117,9 +120,9 @@ def render_media() -> None:
             "-ss",
             "0",
             "-t",
-            "8",
+            str(seconds),
             "-i",
-            str(DEMO_MP4),
+            str(source),
             "-vf",
             "fps=12,scale=900:-1:flags=lanczos,palettegen",
             str(palette),
@@ -133,26 +136,40 @@ def render_media() -> None:
             "-ss",
             "0",
             "-t",
-            "8",
+            str(seconds),
             "-i",
-            str(DEMO_MP4),
+            str(source),
             "-i",
             str(palette),
             "-lavfi",
             "fps=12,scale=900:-1:flags=lanczos[x];[x][1:v]paletteuse",
-            str(MEDIA_GIF),
+            str(target),
         ],
         check=True,
     )
     palette.unlink(missing_ok=True)
 
 
+def render_media() -> None:
+    for source in (PITCH_DEMO_MP4, SETUP_DEMO_MP4, LEGACY_DEMO_MP4):
+        if not source.exists():
+            raise FileNotFoundError(f"Missing demo video: {source}")
+    shutil.copy2(PITCH_DEMO_MP4, PITCH_MEDIA_MP4)
+    shutil.copy2(SETUP_DEMO_MP4, SETUP_MEDIA_MP4)
+    shutil.copy2(LEGACY_DEMO_MP4, LEGACY_MEDIA_MP4)
+    render_gif(PITCH_DEMO_MP4, PITCH_MEDIA_GIF, 8)
+    render_gif(SETUP_DEMO_MP4, SETUP_MEDIA_GIF, 8)
+    shutil.copy2(SETUP_MEDIA_GIF, LEGACY_MEDIA_GIF)
+
+
 def main() -> None:
     render_hero()
     render_media()
     print(f"Rendered {README_HERO}")
-    print(f"Rendered {MEDIA_MP4}")
-    print(f"Rendered {MEDIA_GIF}")
+    print(f"Rendered {PITCH_MEDIA_MP4}")
+    print(f"Rendered {PITCH_MEDIA_GIF}")
+    print(f"Rendered {SETUP_MEDIA_MP4}")
+    print(f"Rendered {SETUP_MEDIA_GIF}")
 
 
 if __name__ == "__main__":

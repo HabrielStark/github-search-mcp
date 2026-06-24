@@ -46,13 +46,21 @@ README text remains native GitHub Markdown typography.
 Primary README media:
 
 - `assets/brand/github-search-mcp-readme-hero.png`
-- `media/github-search-mcp-walkthrough-preview.gif`
-- `media/github-search-mcp-walkthrough.mp4`
+- `media/github-search-mcp-pitch-preview.gif`
+- `media/github-search-mcp-pitch.mp4`
+- `media/github-search-mcp-setup-preview.gif`
+- `media/github-search-mcp-setup.mp4`
+- `media/github-search-mcp-walkthrough-preview.gif` (compatibility alias for setup)
+- `media/github-search-mcp-walkthrough.mp4` (compatibility alias for setup)
 
 Interactive/static demo media:
 
 - `demo/index.html`
-- `demo/github-search-mcp-demo.mp4`
+- `demo/github-search-mcp-pitch.mp4`
+- `demo/github-search-mcp-setup.mp4`
+- `demo/github-search-mcp-demo.mp4` (compatibility alias for setup)
+- `demo/assets/pitch-poster.png`
+- `demo/assets/setup-poster.png`
 - `demo/assets/demo-poster.png`
 
 ## Regeneration
@@ -74,7 +82,8 @@ Requirements:
 - Hero image first.
 - Short product description under the hero.
 - Demo video table before long docs.
-- Use GIF preview for GitHub inline motion.
-- Use MP4 link for the full walkthrough.
+- Show both videos: project pitch first, setup walkthrough second.
+- Use GIF previews for GitHub inline motion.
+- Link previews directly to raw MP4 URLs so GitHub does not open the blob viewer.
 - Keep setup commands copyable and close to the top.
 - Keep `oss_` tool names visible because they are the stable MCP API surface.

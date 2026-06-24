@@ -4,7 +4,8 @@
 
 <p align="center">
   <a href="demo/index.html">Demo page</a> |
-  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4">Play full MP4</a> |
+  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4">Pitch MP4</a> |
+  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4">Setup MP4</a> |
   <a href="DESIGN.md">Design system</a> |
   <a href="SECURITY.md">Security</a>
 </p>
@@ -36,13 +37,14 @@ why, and what should I check before I adopt it?_
 
 ## Demo videos
 
-The preview below is an animated GIF. Use the MP4 link for the full walkthrough.
+The previews below are animated GIFs. Use the MP4 links for the full rendered
+videos.
 
-| GitHub Search MCP walkthrough                                                                                                                                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4)          |
-| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                                                                                                    |
-| [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4) \| [Repo file](media/github-search-mcp-walkthrough.mp4) \| 30s \| 1920x1080 \| 30fps |
+| Project pitch                                                                                                                                                                                           | Setup and usage walkthrough                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![GitHub Search MCP pitch preview](media/github-search-mcp-pitch-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4)                | [![GitHub Search MCP setup preview](media/github-search-mcp-setup-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4)                |
+| What GitHub Search MCP is, the dependency-research problem it solves, and why the read-only MCP loop is useful for repository decisions.                                                                | The real first-run path: install command, MCP client config, repository search, candidate comparison, and integration notes.                                                                            |
+| [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4) \| [Repo file](media/github-search-mcp-pitch.mp4) \| 26s \| 1920x1080 \| 30fps | [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4) \| [Repo file](media/github-search-mcp-setup.mp4) \| 34s \| 1920x1080 \| 30fps |
 
 Brand and video source files live under `assets/brand`, `demo`, `media`, and
 `scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).

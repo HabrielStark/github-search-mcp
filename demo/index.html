@@ -49,8 +49,7 @@
       body {
         margin: 0;
         background:
-          radial-gradient(circle at 52% -18%, rgb(47 129 247 / 0.24), transparent 34rem),
-          radial-gradient(circle at 88% 14%, rgb(63 185 80 / 0.13), transparent 26rem),
+          linear-gradient(180deg, rgb(47 129 247 / 0.13), transparent 24rem),
           linear-gradient(180deg, var(--bg-2), var(--bg));
         color: var(--text);
         overflow-x: hidden;
@@ -255,12 +254,10 @@
       .product::before {
         content: "";
         position: absolute;
-        inset: -34px -28px auto auto;
-        width: 230px;
-        height: 230px;
-        border-radius: 999px;
-        background: rgb(47 129 247 / 0.22);
-        filter: blur(44px);
+        inset: -18px -18px auto auto;
+        width: 52%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgb(47 129 247 / 0.75));
       }
 
       .window {
@@ -454,7 +451,7 @@
       .score {
         display: grid;
         place-items: center;
-        width: 62px;
+        width: 76px;
         height: 38px;
         border-radius: 999px;
         background: #1f6feb;
@@ -491,11 +488,36 @@
 
       .video-frame {
         overflow: hidden;
-        margin-top: 34px;
         border: 1px solid #d0d7de;
         border-radius: 16px;
         background: #0d1117;
         box-shadow: 0 28px 80px rgb(36 41 47 / 0.14);
+      }
+
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 34px;
+      }
+
+      .video-card {
+        min-width: 0;
+      }
+
+      .video-card h3 {
+        margin: 0 0 10px;
+        color: #24292f;
+        font-size: 20px;
+        letter-spacing: -0.03em;
+      }
+
+      .video-card p {
+        min-height: 44px;
+        margin: 0 0 14px;
+        color: #57606a;
+        font-size: 14px;
+        line-height: 1.5;
       }
 
       video {
@@ -627,7 +649,8 @@
 
       @media (max-width: 940px) {
         .hero,
-        .split {
+        .split,
+        .video-grid {
           grid-template-columns: 1fr;
         }
 
@@ -843,18 +866,36 @@
 
     <main>
       <section id="video" class="shell section">
-        <h2>A real first-run walkthrough.</h2>
+        <h2>Two videos: pitch first, then setup.</h2>
         <p class="section-lede">
-          The included video shows the user path from install command to MCP client configuration,
-          repository search, comparison, and integration notes.
+          The pitch explains the project and the setup walkthrough shows the user path from install
+          command to MCP client configuration, repository search, comparison, and integration notes.
         </p>
-        <div class="video-frame">
-          <video
-            src="./github-search-mcp-demo.mp4"
-            poster="./assets/demo-poster.png"
-            controls
-            preload="metadata"
-          ></video>
+        <div class="video-grid">
+          <article class="video-card">
+            <h3>Project pitch</h3>
+            <p>What GitHub Search MCP is and why it improves repository decisions.</p>
+            <div class="video-frame">
+              <video
+                src="./github-search-mcp-pitch.mp4"
+                poster="./assets/pitch-poster.png"
+                controls
+                preload="metadata"
+              ></video>
+            </div>
+          </article>
+          <article class="video-card">
+            <h3>Setup walkthrough</h3>
+            <p>Install, MCP client config, search, compare, and generate integration notes.</p>
+            <div class="video-frame">
+              <video
+                src="./github-search-mcp-setup.mp4"
+                poster="./assets/setup-poster.png"
+                controls
+                preload="metadata"
+              ></video>
+            </div>
+          </article>
         </div>
       </section>
 

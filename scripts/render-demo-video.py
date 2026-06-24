@@ -16,12 +16,16 @@ SOURCE_LOGO = ASSETS / "github-search-logo-source.png"
 LOGO_512 = ASSETS / "github-search-logo-512.png"
 LOGO_128 = ASSETS / "github-search-logo-128.png"
 POSTER = ASSETS / "demo-poster.png"
-OUTPUT = DEMO / "github-search-mcp-demo.mp4"
+PITCH_POSTER = ASSETS / "pitch-poster.png"
+SETUP_POSTER = ASSETS / "setup-poster.png"
+PITCH_OUTPUT = DEMO / "github-search-mcp-pitch.mp4"
+SETUP_OUTPUT = DEMO / "github-search-mcp-setup.mp4"
+LEGACY_OUTPUT = DEMO / "github-search-mcp-demo.mp4"
 
 W, H = 1920, 1080
 FPS = 30
-SECONDS = 30
-TOTAL_FRAMES = FPS * SECONDS
+PITCH_SECONDS = 26
+SETUP_SECONDS = 34
 
 BG = "#0d1117"
 BG_DARK = "#010409"
@@ -145,8 +149,9 @@ def base_frame() -> Image.Image:
         od.line((x, 0, x, H), fill=(240, 246, 252, 10), width=1)
     for y in range(0, H, 72):
         od.line((0, y, W, y), fill=(240, 246, 252, 10), width=1)
-    od.ellipse((920, -420, 1880, 540), fill=(47, 129, 247, 44))
-    od.ellipse((1240, 20, 2080, 860), fill=(63, 185, 80, 25))
+    for y in range(0, 360):
+        alpha = int(24 * (1 - y / 360))
+        od.line((0, y, W, y), fill=(47, 129, 247, alpha), width=1)
     overlay = overlay.filter(ImageFilter.GaussianBlur(1))
     img = Image.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
     return img
@@ -212,8 +217,8 @@ def product_window(img: Image.Image, draw: ImageDraw.ImageDraw, logo: Image.Imag
             rounded(draw, (tx, yy + 68, tx + tw + 18, yy + 91), 12, PANEL_2, LINE)
             draw.text((tx + 9, yy + 71), tag, font=F_TINY, fill=MUTED)
             tx += tw + 26
-        rounded(draw, (x + 644, yy + 20, x + 706, yy + 54), 17, BLUE)
-        draw.text((x + 655, yy + 28), score, font=F_TINY, fill=WHITE)
+        rounded(draw, (x + 628, yy + 20, x + 712, yy + 54), 17, BLUE)
+        draw.text((x + 640, yy + 28), score, font=F_TINY, fill=WHITE)
 
 
 def scene_intro(img: Image.Image, draw: ImageDraw.ImageDraw, logo: Image.Image, t: float):
@@ -338,12 +343,26 @@ SCENES = [
     (25, 30, scene_end),
 ]
 
+PITCH_SCENES = [
+    (0, 7, scene_intro),
+    (7, 15, scene_search),
+    (15, 22, scene_compare),
+    (22, 26, scene_end),
+]
 
-def render_frame(frame: int, logo: Image.Image) -> Image.Image:
+SETUP_SCENES = [
+    (0, 8, scene_install),
+    (8, 18, scene_search),
+    (18, 28, scene_compare),
+    (28, 34, scene_end),
+]
+
+
+def render_frame(frame: int, logo: Image.Image, scenes) -> Image.Image:
     seconds = frame / FPS
     img = base_frame()
     draw = ImageDraw.Draw(img)
-    for start, end, scene in SCENES:
+    for start, end, scene in scenes:
         if start <= seconds < end:
             local_t = ease((seconds - start) / (end - start))
             scene(img, draw, logo, local_t)
@@ -351,18 +370,16 @@ def render_frame(frame: int, logo: Image.Image) -> Image.Image:
     return img
 
 
-def main() -> None:
-    if shutil.which("ffmpeg") is None:
-        raise RuntimeError("ffmpeg is required to render demo video")
-    logo = prepare_logo()
+def render_video(output: Path, scenes, seconds: int, poster: Path, poster_second: int, logo: Image.Image) -> None:
     if FRAMES.exists():
         shutil.rmtree(FRAMES)
     FRAMES.mkdir(parents=True)
-    poster_frame = FPS * 14
-    for frame in range(TOTAL_FRAMES):
-        img = render_frame(frame, logo)
+    total_frames = FPS * seconds
+    poster_frame = FPS * poster_second
+    for frame in range(total_frames):
+        img = render_frame(frame, logo, scenes)
         if frame == poster_frame:
-            img.save(POSTER)
+            img.save(poster)
         img.save(FRAMES / f"frame_{frame:04d}.png", optimize=False)
     subprocess.run(
         [
@@ -378,12 +395,23 @@ def main() -> None:
             "yuv420p",
             "-movflags",
             "+faststart",
-            str(OUTPUT),
+            str(output),
         ],
         check=True,
     )
     shutil.rmtree(FRAMES)
-    print(f"Rendered {OUTPUT}")
+    print(f"Rendered {output}")
+
+
+def main() -> None:
+    if shutil.which("ffmpeg") is None:
+        raise RuntimeError("ffmpeg is required to render demo video")
+    logo = prepare_logo()
+    render_video(PITCH_OUTPUT, PITCH_SCENES, PITCH_SECONDS, PITCH_POSTER, 9, logo)
+    render_video(SETUP_OUTPUT, SETUP_SCENES, SETUP_SECONDS, SETUP_POSTER, 10, logo)
+    shutil.copy2(SETUP_OUTPUT, LEGACY_OUTPUT)
+    shutil.copy2(SETUP_POSTER, POSTER)
+    print(f"Updated legacy compatibility video {LEGACY_OUTPUT}")
 
 
 if __name__ == "__main__":
