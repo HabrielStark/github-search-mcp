@@ -10,6 +10,13 @@ This directory contains the public user-experience demo for GitHub Search MCP:
 - `assets/demo-poster.png` is a compatibility copy of the setup poster.
 - `assets/github-search-logo-*.png` are the app icon variants.
 
+## GitHub previews
+
+| Project pitch                                                          | Setup walkthrough                                                          |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| ![Project pitch preview](../media/github-search-mcp-pitch-preview.gif) | ![Setup walkthrough preview](../media/github-search-mcp-setup-preview.gif) |
+| [`github-search-mcp-pitch.mp4`](github-search-mcp-pitch.mp4)           | [`github-search-mcp-setup.mp4`](github-search-mcp-setup.mp4)               |
+
 Open the page directly:
 
 ```powershell

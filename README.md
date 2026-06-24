@@ -3,9 +3,8 @@
 # GitHub Search MCP
 
 <p align="center">
-  <a href="demo/index.html">Demo page</a> |
-  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4">Pitch MP4</a> |
-  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4">Setup MP4</a> |
+  <a href="#demo-videos">Demo videos</a> |
+  <a href="demo/README.md">Demo files</a> |
   <a href="DESIGN.md">Design system</a> |
   <a href="SECURITY.md">Security</a>
 </p>
@@ -37,14 +36,14 @@ why, and what should I check before I adopt it?_
 
 ## Demo videos
 
-The previews below are animated GIFs. Use the MP4 links for the full rendered
-videos.
+The demos play inline as animated GIF previews on GitHub. MP4 files are kept as
+source/download artifacts, not primary watch links.
 
-| Project pitch                                                                                                                                                                                           | Setup and usage walkthrough                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![GitHub Search MCP pitch preview](media/github-search-mcp-pitch-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4)                | [![GitHub Search MCP setup preview](media/github-search-mcp-setup-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4)                |
-| What GitHub Search MCP is, the dependency-research problem it solves, and why the read-only MCP loop is useful for repository decisions.                                                                | The real first-run path: install command, MCP client config, repository search, candidate comparison, and integration notes.                                                                            |
-| [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-pitch.mp4) \| [Repo file](media/github-search-mcp-pitch.mp4) \| 26s \| 1920x1080 \| 30fps | [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-setup.mp4) \| [Repo file](media/github-search-mcp-setup.mp4) \| 34s \| 1920x1080 \| 30fps |
+| Project pitch                                                                                                                          | Setup and usage walkthrough                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| ![GitHub Search MCP pitch preview](media/github-search-mcp-pitch-preview.gif)                                                          | ![GitHub Search MCP setup preview](media/github-search-mcp-setup-preview.gif)                                                |
+| What GitHub Search MCP is, the dependency-research problem it solves, and why the read-only MCP loop is useful for repository choices. | The real first-run path: install command, MCP client config, repository search, candidate comparison, and integration notes. |
+| Source: [`media/github-search-mcp-pitch.mp4`](media/github-search-mcp-pitch.mp4) · 26s · 1920x1080 · 30fps                             | Source: [`media/github-search-mcp-setup.mp4`](media/github-search-mcp-setup.mp4) · 34s · 1920x1080 · 30fps                   |
 
 Brand and video source files live under `assets/brand`, `demo`, `media`, and
 `scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).

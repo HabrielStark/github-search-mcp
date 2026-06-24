@@ -84,6 +84,8 @@ Requirements:
 - Demo video table before long docs.
 - Show both videos: project pitch first, setup walkthrough second.
 - Use GIF previews for GitHub inline motion.
-- Link previews directly to raw MP4 URLs so GitHub does not open the blob viewer.
+- Do not make GIF previews or primary CTAs link to raw MP4 files; browsers often
+  download those links instead of presenting a watch experience.
+- Keep MP4 links clearly labeled as source/download artifacts only.
 - Keep setup commands copyable and close to the top.
 - Keep `oss_` tool names visible because they are the stable MCP API surface.
