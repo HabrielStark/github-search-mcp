@@ -30,9 +30,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Rebuild native optional dependencies
-        run: pnpm rebuild better-sqlite3
-
       - name: Lint
         run: pnpm lint
 

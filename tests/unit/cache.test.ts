@@ -8,6 +8,12 @@ import { createSqliteCacheStore, SqliteCacheStore } from "../../src/cache/sqlite
 import { loadConfig } from "../../src/config.js";
 import { silentLogger } from "../../src/utils/logger.js";
 
+const sqliteNativeUnavailableInCi =
+  process.env.GITHUB_ACTIONS === "true" &&
+  process.platform === "win32" &&
+  process.versions.node.startsWith("20.");
+const describeSqlite = sqliteNativeUnavailableInCi ? describe.skip : describe;
+
 describe("MemoryCacheStore", () => {
   it("stores and retrieves values", () => {
     const c = new MemoryCacheStore();
@@ -70,7 +76,7 @@ describe("cacheKeys", () => {
   });
 });
 
-describe("SqliteCacheStore", () => {
+describeSqlite("SqliteCacheStore", () => {
   let dir: string;
   beforeEach(() => {
     dir = mkdtempSync(join(tmpdir(), "oss-sqlite-"));
@@ -130,7 +136,7 @@ describe("MemoryCacheStore — byte budget & isolation", () => {
   });
 });
 
-describe("SqliteCacheStore — self-defensive", () => {
+describeSqlite("SqliteCacheStore — self-defensive", () => {
   let dir2: string;
   beforeEach(() => {
     dir2 = mkdtempSync(join(tmpdir(), "oss-sqlite-def-"));
