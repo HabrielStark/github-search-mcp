@@ -12,10 +12,14 @@ This directory contains the public user-experience demo for GitHub Search MCP:
 
 ## GitHub previews
 
+Watch the videos in the hosted browser page:
+
+https://habrielstark.github.io/github-search-mcp/
+
 | Project pitch                                                          | Setup walkthrough                                                          |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | ![Project pitch preview](../media/github-search-mcp-pitch-preview.gif) | ![Setup walkthrough preview](../media/github-search-mcp-setup-preview.gif) |
-| [`github-search-mcp-pitch.mp4`](github-search-mcp-pitch.mp4)           | [`github-search-mcp-setup.mp4`](github-search-mcp-setup.mp4)               |
+| 26s - 1920x1080 - 30fps                                                | 34s - 1920x1080 - 30fps                                                    |
 
 Open the page directly:
 

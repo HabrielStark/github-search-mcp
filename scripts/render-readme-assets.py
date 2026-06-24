@@ -38,8 +38,8 @@ BLUE = "#2f81f7"
 
 def font(size: int, weight: str = "regular") -> ImageFont.FreeTypeFont:
     candidates = {
-        "regular": ["C:/Windows/Fonts/segoeui.ttf", "C:/Windows/Fonts/arial.ttf"],
-        "bold": ["C:/Windows/Fonts/segoeuib.ttf", "C:/Windows/Fonts/arialbd.ttf"],
+        "regular": ["C:/Windows/Fonts/bahnschrift.ttf", "C:/Windows/Fonts/segoeui.ttf", "C:/Windows/Fonts/arial.ttf"],
+        "bold": ["C:/Windows/Fonts/bahnschrift.ttf", "C:/Windows/Fonts/segoeuib.ttf", "C:/Windows/Fonts/arialbd.ttf"],
         "mono": ["C:/Windows/Fonts/CascadiaMono.ttf", "C:/Windows/Fonts/consola.ttf"],
     }[weight]
     for candidate in candidates:
@@ -50,11 +50,12 @@ def font(size: int, weight: str = "regular") -> ImageFont.FreeTypeFont:
     return ImageFont.load_default()
 
 
-F_DISPLAY = font(94, "bold")
-F_H2 = font(38, "bold")
+F_DISPLAY = font(72, "bold")
+F_H2 = font(36, "bold")
 F_BODY = font(27)
 F_SMALL = font(20)
 F_MONO = font(20, "mono")
+F_TINY = font(16)
 
 
 def rounded(draw: ImageDraw.ImageDraw, box, radius: int, fill, outline=None, width=1):
@@ -79,20 +80,18 @@ def render_hero() -> None:
         draw.line((x, 0, x, H), fill="#111820", width=1)
     for y in range(0, H, 56):
         draw.line((0, y, W, y), fill="#111820", width=1)
-    draw.ellipse((930, -260, 1600, 500), fill="#0b2d4d")
-    draw.ellipse((1110, 40, 1560, 510), fill="#06351d")
 
     mark = logo.resize((118, 118), Image.Resampling.LANCZOS)
     img.paste(mark, (88, 78), mark)
-    draw.text((230, 78), "GITHUB", font=F_SMALL, fill=MUTED)
-    draw.text((228, 110), "SEARCH MCP", font=F_DISPLAY, fill=TEXT)
-    draw.text((232, 216), "Repository search, license risk, and OSS comparison.", font=F_BODY, fill="#c9d1d9")
+    draw.text((230, 76), "READ-ONLY MODEL CONTEXT PROTOCOL SERVER", font=F_SMALL, fill=MUTED)
+    draw.text((228, 112), "GitHub Search MCP", font=F_DISPLAY, fill=TEXT)
+    draw.text((232, 205), "Repository search, license risk,\nand OSS comparison for agents.", font=F_BODY, fill="#c9d1d9", spacing=7)
 
     badges = [
         ("DOCS", "#30363d", TEXT),
         ("NPM github-search-mcp", "#ffd33d", "#0d1117"),
-        ("README DEMO", BLUE, TEXT),
-        ("LICENSE MIT", "#238636", TEXT),
+        ("DEMO", BLUE, TEXT),
+        ("MIT", "#238636", TEXT),
     ]
     x = 232
     for label, bg, fg in badges:
@@ -101,10 +100,21 @@ def render_hero() -> None:
         draw.text((x + 15, 304), label, font=F_MONO, fill=fg)
         x += tw + 36
 
-    rounded(draw, (974, 168, 1318, 346), 16, PANEL, LINE)
-    draw.text((1006, 200), "tool call", font=F_SMALL, fill=MUTED)
-    draw.text((1006, 239), "oss_search", font=F_H2, fill=TEXT)
-    draw.text((1008, 294), "structured GitHub results", font=F_SMALL, fill=GREEN)
+    rounded(draw, (918, 74, 1294, 356), 18, PANEL, LINE)
+    draw.text((950, 106), "agent question", font=F_SMALL, fill=MUTED)
+    draw.text((950, 145), "Find an active MIT\nqueue library.", font=F_H2, fill=TEXT, spacing=8)
+    draw.line((950, 240, 1262, 240), fill=LINE, width=1)
+    rows = [
+        ("taskforcesh/bullmq", "94", GREEN),
+        ("fastify/fastify", "91", BLUE),
+        ("remix-run/react-router", "86", "#a371f7"),
+    ]
+    y = 262
+    for repo, score, color in rows:
+        draw.ellipse((950, y + 8, 960, y + 18), fill=color)
+        draw.text((970, y), repo, font=F_SMALL, fill="#f0f6fc")
+        draw.text((1240, y), score, font=F_TINY, fill="#c9d1d9", anchor="ra")
+        y += 29
 
     img.save(README_HERO)
 

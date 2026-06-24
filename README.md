@@ -3,8 +3,9 @@
 # GitHub Search MCP
 
 <p align="center">
-  <a href="#demo-videos">Demo videos</a> |
-  <a href="demo/README.md">Demo files</a> |
+  <a href="https://habrielstark.github.io/github-search-mcp/">Watch demo</a> |
+  <a href="#demo-videos">Preview GIFs</a> |
+  <a href="demo/README.md">Source files</a> |
   <a href="DESIGN.md">Design system</a> |
   <a href="SECURITY.md">Security</a>
 </p>
@@ -36,14 +37,21 @@ why, and what should I check before I adopt it?_
 
 ## Demo videos
 
-The demos play inline as animated GIF previews on GitHub. MP4 files are kept as
-source/download artifacts, not primary watch links.
+Open the browser demo to watch the MP4s inline with player controls. The
+previews below are animated GIFs, so they play directly inside the GitHub README
+without forcing a file download.
+
+<p align="center">
+  <a href="https://habrielstark.github.io/github-search-mcp/"><strong>Watch the browser demo</strong></a>
+  &nbsp;|&nbsp;
+  <a href="demo/index.html">Demo page source</a>
+</p>
 
 | Project pitch                                                                                                                          | Setup and usage walkthrough                                                                                                  |
 | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | ![GitHub Search MCP pitch preview](media/github-search-mcp-pitch-preview.gif)                                                          | ![GitHub Search MCP setup preview](media/github-search-mcp-setup-preview.gif)                                                |
 | What GitHub Search MCP is, the dependency-research problem it solves, and why the read-only MCP loop is useful for repository choices. | The real first-run path: install command, MCP client config, repository search, candidate comparison, and integration notes. |
-| Source: [`media/github-search-mcp-pitch.mp4`](media/github-search-mcp-pitch.mp4) · 26s · 1920x1080 · 30fps                             | Source: [`media/github-search-mcp-setup.mp4`](media/github-search-mcp-setup.mp4) · 34s · 1920x1080 · 30fps                   |
+| Full video plays on the browser demo page. 26s - 1920x1080 - 30fps.                                                                    | Full video plays on the browser demo page. 34s - 1920x1080 - 30fps.                                                          |
 
 Brand and video source files live under `assets/brand`, `demo`, `media`, and
 `scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).
