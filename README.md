@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="demo/index.html">Demo page</a> |
-  <a href="media/github-search-mcp-walkthrough.mp4">Play full MP4</a> |
+  <a href="https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4">Play full MP4</a> |
   <a href="DESIGN.md">Design system</a> |
   <a href="SECURITY.md">Security</a>
 </p>
@@ -38,11 +38,11 @@ why, and what should I check before I adopt it?_
 
 The preview below is an animated GIF. Use the MP4 link for the full walkthrough.
 
-| GitHub Search MCP walkthrough                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------- |
-| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](media/github-search-mcp-walkthrough.mp4)  |
-| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                      |
-| [Play full MP4](media/github-search-mcp-walkthrough.mp4) \| [Repo file](demo/github-search-mcp-demo.mp4) \| 30s \| 1920x1080 \| 30fps |
+| GitHub Search MCP walkthrough                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4)          |
+| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                                                                                                    |
+| [Play full MP4](https://raw.githubusercontent.com/HabrielStark/github-search-mcp/main/media/github-search-mcp-walkthrough.mp4) \| [Repo file](media/github-search-mcp-walkthrough.mp4) \| 30s \| 1920x1080 \| 30fps |
 
 Brand and video source files live under `assets/brand`, `demo`, `media`, and
 `scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).
