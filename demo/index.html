@@ -3,26 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>OSS Research MCP Demo</title>
+    <title>GitHub Search MCP Demo</title>
     <meta
       name="description"
-      content="A polished user-experience demo for discovering, analyzing, and comparing open-source GitHub repositories through OSS Research MCP."
+      content="A GitHub-native product demo for searching repositories, checking license risk, and comparing open-source options through GitHub Search MCP."
     />
-    <link rel="icon" href="./assets/oss-research-logo-128.png" />
+    <link rel="icon" href="./assets/github-search-logo-128.png" />
     <style>
       :root {
-        color-scheme: light;
-        --ink: #0d1117;
-        --muted: #59636e;
-        --line: #d8dee4;
-        --panel: #ffffff;
+        color-scheme: dark;
+        --bg: #0d1117;
+        --bg-2: #010409;
+        --panel: #161b22;
+        --panel-2: #0d1117;
+        --text: #f0f6fc;
+        --muted: #8b949e;
+        --subtle: #6e7681;
+        --line: #30363d;
+        --line-soft: #21262d;
+        --blue: #2f81f7;
+        --green: #3fb950;
+        --purple: #a371f7;
+        --amber: #d29922;
+        --danger: #f85149;
         --canvas: #f6f8fa;
-        --accent: #2ea043;
-        --accent-ink: #176f2c;
-        --soft: #eef6f0;
-        --code: #161b22;
-        --radius: 18px;
-        --shadow: 0 24px 80px rgb(13 17 23 / 0.12);
+        --ink: #24292f;
+        --radius: 14px;
+        --shadow: 0 28px 90px rgb(1 4 9 / 0.48);
         font-family:
           ui-sans-serif,
           -apple-system,
@@ -42,8 +49,10 @@
       body {
         margin: 0;
         background:
-          linear-gradient(180deg, #ffffff 0%, var(--canvas) 42%, #ffffff 100%), var(--canvas);
-        color: var(--ink);
+          radial-gradient(circle at 52% -18%, rgb(47 129 247 / 0.24), transparent 34rem),
+          radial-gradient(circle at 88% 14%, rgb(63 185 80 / 0.13), transparent 26rem),
+          linear-gradient(180deg, var(--bg-2), var(--bg));
+        color: var(--text);
         overflow-x: hidden;
       }
 
@@ -51,12 +60,12 @@
         content: "";
         position: fixed;
         inset: 0;
-        z-index: -1;
+        pointer-events: none;
         background-image:
-          linear-gradient(rgb(13 17 23 / 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgb(13 17 23 / 0.035) 1px, transparent 1px);
+          linear-gradient(rgb(240 246 252 / 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgb(240 246 252 / 0.045) 1px, transparent 1px);
         background-size: 44px 44px;
-        mask-image: linear-gradient(180deg, black, transparent 78%);
+        mask-image: linear-gradient(180deg, black 0, transparent 36rem);
       }
 
       a {
@@ -64,7 +73,7 @@
       }
 
       .shell {
-        width: min(1180px, calc(100% - 40px));
+        width: min(1240px, calc(100% - 40px));
         margin: 0 auto;
       }
 
@@ -72,7 +81,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        min-height: 76px;
+        min-height: 78px;
         gap: 24px;
       }
 
@@ -80,87 +89,84 @@
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        font-weight: 760;
+        color: var(--text);
+        font-weight: 750;
         letter-spacing: -0.02em;
         text-decoration: none;
       }
 
       .brand img {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         border-radius: 12px;
-        box-shadow: 0 10px 32px rgb(13 17 23 / 0.14);
+        border: 1px solid rgb(240 246 252 / 0.16);
+        box-shadow: 0 12px 44px rgb(47 129 247 / 0.2);
       }
 
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 8px;
-        color: var(--muted);
+        gap: 4px;
+        color: #c9d1d9;
         font-size: 14px;
       }
 
       .nav-links a {
-        border-radius: 999px;
+        border-radius: 8px;
         padding: 9px 12px;
         text-decoration: none;
       }
 
       .nav-links a:hover {
-        background: #ffffff;
-        color: var(--ink);
+        background: rgb(240 246 252 / 0.08);
+        color: #ffffff;
       }
 
       .hero {
         display: grid;
-        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
-        gap: 54px;
+        grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1.18fr);
+        gap: 56px;
         align-items: center;
-        min-height: calc(100dvh - 76px);
-        padding: 42px 0 86px;
-      }
-
-      .hero > *,
-      .showcase,
-      .product-window,
-      .workspace,
-      .sidebar,
-      .input {
-        min-width: 0;
+        min-height: calc(100dvh - 78px);
+        padding: 42px 0 84px;
       }
 
       .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         width: fit-content;
-        margin: 0 0 20px;
-        border: 1px solid rgb(46 160 67 / 0.26);
+        border: 1px solid rgb(63 185 80 / 0.34);
         border-radius: 999px;
-        background: var(--soft);
-        color: var(--accent-ink);
+        background: rgb(63 185 80 / 0.1);
+        color: #7ee787;
         padding: 7px 11px;
         font-size: 13px;
-        font-weight: 720;
+        font-weight: 700;
       }
 
-      h1,
-      h2,
-      h3,
-      p {
-        margin: 0;
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--green);
+        box-shadow: 0 0 0 4px rgb(63 185 80 / 0.14);
       }
 
       h1 {
-        max-width: 11ch;
-        font-size: clamp(52px, 7vw, 92px);
-        line-height: 0.94;
-        letter-spacing: -0.065em;
+        max-width: 10.5ch;
+        margin: 22px 0 20px;
+        font-size: clamp(56px, 7vw, 94px);
+        line-height: 0.9;
+        letter-spacing: -0.075em;
       }
 
       .hero-copy {
-        margin-top: 24px;
-        max-width: 58ch;
-        color: var(--muted);
-        font-size: 19px;
-        line-height: 1.6;
+        max-width: 600px;
+        margin: 0;
+        color: #c9d1d9;
+        font-size: 20px;
+        line-height: 1.55;
       }
 
       .actions {
@@ -175,332 +181,468 @@
         align-items: center;
         justify-content: center;
         min-height: 46px;
-        border-radius: 999px;
+        border-radius: 8px;
         padding: 0 18px;
-        border: 1px solid var(--line);
-        background: #ffffff;
-        color: var(--ink);
-        font-weight: 720;
+        border: 1px solid transparent;
+        font-weight: 750;
         text-decoration: none;
-        box-shadow: 0 8px 28px rgb(13 17 23 / 0.08);
-      }
-
-      .button.primary {
-        border-color: var(--ink);
-        background: var(--ink);
-        color: #ffffff;
+        transition:
+          transform 140ms ease,
+          background 140ms ease,
+          border-color 140ms ease;
       }
 
       .button:active {
         transform: translateY(1px);
       }
 
-      .showcase {
-        position: relative;
+      .button.primary {
+        background: #238636;
+        color: #ffffff;
+        box-shadow: 0 18px 42px rgb(35 134 54 / 0.28);
       }
 
-      .product-window {
+      .button.primary:hover {
+        background: #2ea043;
+      }
+
+      .button.secondary {
+        border-color: var(--line);
+        background: rgb(240 246 252 / 0.06);
+        color: var(--text);
+      }
+
+      .button.secondary:hover {
+        border-color: #8b949e;
+        background: rgb(240 246 252 / 0.1);
+      }
+
+      .hero-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 34px;
+        max-width: 560px;
+      }
+
+      .metric {
+        border: 1px solid var(--line-soft);
+        border-radius: 12px;
+        background: rgb(13 17 23 / 0.82);
+        padding: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        color: #ffffff;
+        font-size: 18px;
+        letter-spacing: -0.03em;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .product {
+        position: relative;
+        z-index: 1;
+        min-width: 0;
+      }
+
+      .product::before {
+        content: "";
+        position: absolute;
+        inset: -34px -28px auto auto;
+        width: 230px;
+        height: 230px;
+        border-radius: 999px;
+        background: rgb(47 129 247 / 0.22);
+        filter: blur(44px);
+      }
+
+      .window {
+        position: relative;
         overflow: hidden;
-        border: 1px solid rgb(13 17 23 / 0.1);
-        border-radius: var(--radius);
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 18px;
         background: var(--panel);
         box-shadow: var(--shadow);
       }
 
-      .window-bar {
+      .window-top {
         display: flex;
         align-items: center;
         gap: 8px;
-        height: 46px;
         border-bottom: 1px solid var(--line);
-        padding: 0 16px;
+        background: #0d1117;
+        padding: 13px 16px;
       }
 
       .dot {
         width: 10px;
         height: 10px;
         border-radius: 999px;
-        background: #d0d7de;
+        background: var(--subtle);
       }
 
-      .dot:nth-child(1) {
-        background: #ff6a69;
+      .dot.red {
+        background: var(--danger);
       }
 
-      .dot:nth-child(2) {
-        background: #d29922;
+      .dot.yellow {
+        background: var(--amber);
       }
 
-      .dot:nth-child(3) {
-        background: var(--accent);
+      .dot.green {
+        background: var(--green);
       }
 
-      .window-title {
-        margin-left: auto;
-        color: var(--muted);
+      .repo-path {
+        margin-left: 12px;
+        color: #c9d1d9;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
         font-size: 13px;
-        font-weight: 650;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
-      .demo-body {
+      .app-grid {
         display: grid;
-        grid-template-columns: 240px 1fr;
+        grid-template-columns: 220px minmax(0, 1fr);
         min-height: 520px;
       }
 
       .sidebar {
         border-right: 1px solid var(--line);
-        background: #fbfcfd;
+        background: #0d1117;
         padding: 20px;
       }
 
-      .logo-lockup {
+      .side-brand {
         display: flex;
         align-items: center;
         gap: 12px;
         margin-bottom: 24px;
       }
 
-      .logo-lockup img {
-        width: 42px;
-        height: 42px;
-        border-radius: 13px;
+      .side-brand img {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
       }
 
-      .logo-lockup span {
-        font-size: 13px;
+      .side-brand strong {
+        display: block;
+        color: #ffffff;
+      }
+
+      .side-brand span {
+        display: block;
+        margin-top: 2px;
         color: var(--muted);
+        font-size: 12px;
       }
 
-      .tool-list {
+      .menu {
         display: grid;
         gap: 8px;
       }
 
-      .tool {
-        border-radius: 12px;
+      .menu div {
+        border: 1px solid transparent;
+        border-radius: 8px;
+        color: #8b949e;
         padding: 10px 12px;
-        color: var(--muted);
         font-size: 13px;
-        font-weight: 650;
+        font-weight: 700;
       }
 
-      .tool.active {
-        background: var(--soft);
-        color: var(--accent-ink);
+      .menu .active {
+        border-color: rgb(47 129 247 / 0.32);
+        background: rgb(47 129 247 / 0.13);
+        color: #79c0ff;
       }
 
       .workspace {
+        background: #0d1117;
         padding: 24px;
       }
 
-      .query-line {
+      .command {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
         align-items: center;
-        margin-bottom: 20px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #010409;
+        padding: 12px;
       }
 
-      .input {
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 14px 16px;
-        color: var(--muted);
+      .command span {
+        color: #8b949e;
+        font-size: 13px;
+      }
+
+      .command strong {
+        display: block;
+        margin-top: 3px;
+        color: #f0f6fc;
         font-size: 14px;
-        background: #ffffff;
       }
 
       .run {
-        border-radius: 14px;
         border: 0;
-        background: var(--accent);
+        border-radius: 8px;
+        background: #238636;
         color: #ffffff;
-        padding: 14px 16px;
-        font-weight: 780;
+        padding: 11px 14px;
+        font-weight: 800;
       }
 
-      .result-grid {
+      .repo-list {
         display: grid;
         gap: 12px;
+        margin-top: 16px;
       }
 
-      .repo-row {
+      .repo-card {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 18px;
-        align-items: start;
+        gap: 16px;
         border: 1px solid var(--line);
-        border-radius: 16px;
+        border-radius: 12px;
+        background: #161b22;
         padding: 16px;
-        background: #ffffff;
       }
 
-      .repo-row strong {
-        display: block;
-        margin-bottom: 5px;
+      .repo-card h3 {
+        margin: 0;
+        color: #f0f6fc;
+        font-size: 17px;
         letter-spacing: -0.02em;
       }
 
-      .repo-row p {
-        color: var(--muted);
+      .repo-card p {
+        margin: 8px 0 0;
+        color: #8b949e;
         font-size: 13px;
-        line-height: 1.5;
+        line-height: 1.45;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+
+      .tag {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #8b949e;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 700;
       }
 
       .score {
-        min-width: 76px;
-        border-radius: 999px;
-        background: var(--ink);
-        color: #ffffff;
-        padding: 8px 10px;
-        text-align: center;
-        font-size: 13px;
-        font-weight: 760;
-      }
-
-      .video-section,
-      .flow,
-      .commands {
-        padding: 92px 0;
-      }
-
-      .section-head {
         display: grid;
-        gap: 14px;
-        max-width: 690px;
-        margin-bottom: 32px;
+        place-items: center;
+        width: 62px;
+        height: 38px;
+        border-radius: 999px;
+        background: #1f6feb;
+        color: #ffffff;
+        font-weight: 850;
+        font-size: 13px;
       }
 
-      h2 {
-        font-size: clamp(34px, 4vw, 58px);
-        line-height: 1;
-        letter-spacing: -0.055em;
+      main {
+        background: #ffffff;
+        color: var(--ink);
       }
 
-      .section-head p {
-        color: var(--muted);
+      .section {
+        padding: 86px 0;
+      }
+
+      .section h2 {
+        max-width: 760px;
+        margin: 0 0 14px;
+        color: #0d1117;
+        font-size: clamp(36px, 5vw, 62px);
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+      }
+
+      .section-lede {
+        max-width: 720px;
+        margin: 0;
+        color: #57606a;
         font-size: 18px;
         line-height: 1.55;
+      }
+
+      .video-frame {
+        overflow: hidden;
+        margin-top: 34px;
+        border: 1px solid #d0d7de;
+        border-radius: 16px;
+        background: #0d1117;
+        box-shadow: 0 28px 80px rgb(36 41 47 / 0.14);
       }
 
       video {
         display: block;
         width: 100%;
-        border: 1px solid rgb(13 17 23 / 0.12);
-        border-radius: var(--radius);
-        background: var(--ink);
-        box-shadow: var(--shadow);
       }
 
-      .steps {
+      .flow {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 14px;
+        margin-top: 34px;
       }
 
-      .step {
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
+      .flow-card {
+        min-height: 176px;
+        border: 1px solid #d0d7de;
+        border-radius: 14px;
         background: #ffffff;
-        padding: 20px;
+        padding: 18px;
       }
 
-      .step span {
+      .flow-card code {
         display: inline-flex;
-        width: 28px;
-        height: 28px;
-        align-items: center;
-        justify-content: center;
+        border: 1px solid #d0d7de;
         border-radius: 999px;
-        background: var(--soft);
-        color: var(--accent-ink);
-        font-size: 13px;
-        font-weight: 800;
-        margin-bottom: 18px;
+        background: #f6f8fa;
+        color: #0969da;
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 700;
       }
 
-      .step h3 {
-        margin-bottom: 10px;
+      .flow-card h3 {
+        margin: 16px 0 8px;
+        color: #24292f;
         font-size: 18px;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
       }
 
-      .step p {
-        color: var(--muted);
+      .flow-card p {
+        margin: 0;
+        color: #57606a;
         font-size: 14px;
-        line-height: 1.55;
+        line-height: 1.5;
       }
 
-      .code-grid {
+      .split {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+        gap: 34px;
+        align-items: start;
+      }
+
+      .terminal {
+        overflow: hidden;
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        background: #0d1117;
+        color: #c9d1d9;
+        box-shadow: 0 24px 70px rgb(36 41 47 / 0.2);
+      }
+
+      .terminal-head {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #30363d;
+        padding: 13px 16px;
+        color: #8b949e;
+        font-size: 13px;
       }
 
       pre {
         margin: 0;
-        overflow: auto;
-        border-radius: var(--radius);
-        background: var(--code);
-        color: #f0f6fc;
-        padding: 22px;
-        font-size: 13px;
+        overflow-x: auto;
+        padding: 18px;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 14px;
         line-height: 1.65;
-        box-shadow: 0 18px 48px rgb(13 17 23 / 0.18);
       }
 
-      code {
-        font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      .blue {
+        color: #79c0ff;
       }
 
-      .footer {
-        border-top: 1px solid var(--line);
-        padding: 30px 0 44px;
-        color: var(--muted);
+      .green {
+        color: #7ee787;
+      }
+
+      .muted {
+        color: #8b949e;
+      }
+
+      .tool-table {
+        overflow: hidden;
+        border: 1px solid #d0d7de;
+        border-radius: 14px;
+      }
+
+      .tool-row {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 16px;
+        border-top: 1px solid #d8dee4;
+        padding: 14px 16px;
+      }
+
+      .tool-row:first-child {
+        border-top: 0;
+      }
+
+      .tool-row code {
+        color: #0969da;
+        font-weight: 700;
+      }
+
+      .tool-row span {
+        color: #57606a;
         font-size: 14px;
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
+      .footer {
+        border-top: 1px solid #d0d7de;
+        background: #f6f8fa;
+        color: #57606a;
+        padding: 34px 0;
+        font-size: 14px;
       }
 
-      @media (max-width: 920px) {
+      @media (max-width: 940px) {
         .hero,
-        .demo-body,
-        .code-grid {
+        .split {
           grid-template-columns: 1fr;
         }
 
-        .hero {
-          min-height: auto;
-          padding-top: 28px;
+        .product {
+          max-width: 720px;
         }
 
-        .steps {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .sidebar {
-          border-right: 0;
-          border-bottom: 1px solid var(--line);
+        .flow {
+          grid-template-columns: repeat(2, 1fr);
         }
       }
 
-      @media (max-width: 620px) {
+      @media (max-width: 640px) {
         .shell {
-          width: min(100% - 24px, 1180px);
-          max-width: calc(100vw - 24px);
+          width: min(100% - 28px, 1180px);
         }
 
         .nav {
@@ -514,46 +656,60 @@
           overflow-x: auto;
         }
 
-        h1 {
-          max-width: 10ch;
+        .hero {
+          padding: 34px 0 66px;
         }
 
-        .query-line,
-        .repo-row,
-        .steps {
-          grid-template-columns: 1fr;
+        h1 {
+          max-width: 9.2ch;
         }
 
         .hero-copy {
-          width: 330px;
-          max-width: calc(100vw - 24px);
           font-size: 17px;
+          max-width: 31ch;
+          overflow-wrap: anywhere;
+        }
+
+        .actions,
+        .hero-meta,
+        .flow {
+          grid-template-columns: 1fr;
         }
 
         .actions {
           display: grid;
-          grid-template-columns: 1fr;
         }
 
         .button {
-          width: 330px;
-          max-width: calc(100vw - 24px);
-          padding-inline: 14px;
-          white-space: nowrap;
+          width: 100%;
         }
 
-        .product-window {
-          width: calc(100vw - 24px);
-          max-width: 100%;
+        .app-grid {
+          grid-template-columns: 1fr;
         }
 
-        .window-title {
-          display: none;
-        }
-
-        .workspace,
         .sidebar {
-          padding: 20px;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .workspace {
+          padding: 16px;
+        }
+
+        .command,
+        .repo-card,
+        .tool-row {
+          grid-template-columns: 1fr;
+        }
+
+        .score {
+          width: fit-content;
+          padding: 0 14px;
+        }
+
+        .section {
+          padding: 64px 0;
         }
       }
     </style>
@@ -561,168 +717,253 @@
   <body>
     <header class="shell nav">
       <a class="brand" href="../README.md">
-        <img src="./assets/oss-research-logo-128.png" alt="OSS Research MCP logo" />
-        <span>OSS Research MCP</span>
+        <img src="./assets/github-search-logo-128.png" alt="GitHub Search MCP logo" />
+        <span>GitHub Search MCP</span>
       </a>
       <nav class="nav-links" aria-label="Demo navigation">
-        <a href="#video">Video</a>
+        <a href="#video">Demo video</a>
         <a href="#flow">Flow</a>
         <a href="#commands">Commands</a>
-        <a href="../docs/tools.md">Tools</a>
+        <a href="#tools">Tools</a>
       </nav>
     </header>
 
-    <main>
-      <section class="shell hero">
-        <div>
-          <p class="eyebrow">MCP user experience demo</p>
-          <h1>Research open source without leaving your client.</h1>
-          <p class="hero-copy">
-            Search GitHub, inspect license risk, compare candidates, and generate adoption notes
-            through one read-only MCP server.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="#video">Watch the demo</a>
-            <a class="button" href="#commands">Copy setup commands</a>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">
+          <span class="status-dot"></span>Read-only GitHub research for MCP clients
+        </div>
+        <h1>Search GitHub from your agent.</h1>
+        <p class="hero-copy">
+          Find repositories, inspect license risk, compare candidates, and turn dependency research
+          into structured MCP output without leaving your client.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#video">Watch the walkthrough</a>
+          <a class="button secondary" href="#commands">Copy setup</a>
+        </div>
+        <div class="hero-meta" aria-label="Project capabilities">
+          <div class="metric">
+            <strong>12 tools</strong>
+            <span>search, read, compare</span>
+          </div>
+          <div class="metric">
+            <strong>0 writes</strong>
+            <span>safe by default</span>
+          </div>
+          <div class="metric">
+            <strong>GitHub REST</strong>
+            <span>token optional</span>
           </div>
         </div>
+      </div>
 
-        <div class="showcase" aria-label="Product preview">
-          <div class="product-window">
-            <div class="window-bar">
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="window-title">oss_find_open_source_alternatives</span>
-            </div>
-            <div class="demo-body">
-              <aside class="sidebar">
-                <div class="logo-lockup">
-                  <img src="./assets/oss-research-logo-128.png" alt="" />
+      <div class="product" aria-label="GitHub Search MCP product preview">
+        <div class="window">
+          <div class="window-top">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="repo-path">github-search-mcp / search session</span>
+          </div>
+          <div class="app-grid">
+            <aside class="sidebar">
+              <div class="side-brand">
+                <img src="./assets/github-search-logo-128.png" alt="" />
+                <div>
+                  <strong>GitHub Search MCP</strong>
+                  <span>repository scout</span>
+                </div>
+              </div>
+              <div class="menu">
+                <div class="active">Search repositories</div>
+                <div>Analyze repository</div>
+                <div>Compare candidates</div>
+                <div>License risk</div>
+                <div>Integration notes</div>
+              </div>
+            </aside>
+            <section class="workspace">
+              <div class="command">
+                <div>
+                  <span>Tool call</span>
+                  <strong>Find an actively maintained queue library for Node.js</strong>
+                </div>
+                <button class="run">Run</button>
+              </div>
+              <div class="repo-list">
+                <article class="repo-card">
                   <div>
-                    <strong>Repository scout</strong>
-                    <span>12 read-only tools</span>
+                    <h3>taskforcesh/bullmq</h3>
+                    <p>
+                      Redis-backed queues with strong docs, active releases, and mature ecosystem
+                      signals.
+                    </p>
+                    <div class="tags">
+                      <span class="tag">MIT</span>
+                      <span class="tag">TypeScript</span>
+                      <span class="tag">active</span>
+                    </div>
                   </div>
-                </div>
-                <div class="tool-list">
-                  <div class="tool active">search repositories</div>
-                  <div class="tool">analyze repository</div>
-                  <div class="tool">compare repositories</div>
-                  <div class="tool">check license</div>
-                  <div class="tool">integration notes</div>
-                </div>
-              </aside>
-              <section class="workspace">
-                <div class="query-line">
-                  <div class="input">Postman alternative for API testing client</div>
-                  <button class="run" type="button">Run</button>
-                </div>
-                <div class="result-grid">
-                  <article class="repo-row">
-                    <div>
-                      <strong>hoppscotch/hoppscotch</strong>
-                      <p>Open-source API development ecosystem with strong docs and adoption.</p>
+                  <div class="score">94/100</div>
+                </article>
+                <article class="repo-card">
+                  <div>
+                    <h3>OptimalBits/bull</h3>
+                    <p>
+                      Established queue package with broad adoption, but lower recent maintenance
+                      velocity.
+                    </p>
+                    <div class="tags">
+                      <span class="tag">MIT</span>
+                      <span class="tag">popular</span>
+                      <span class="tag">legacy</span>
                     </div>
-                    <div class="score">91/100</div>
-                  </article>
-                  <article class="repo-row">
-                    <div>
-                      <strong>usebruno/bruno</strong>
-                      <p>
-                        Git-friendly API client with local collections and permissive licensing.
-                      </p>
+                  </div>
+                  <div class="score">81/100</div>
+                </article>
+                <article class="repo-card">
+                  <div>
+                    <h3>bee-queue/bee-queue</h3>
+                    <p>Simple Redis queue with smaller surface area and higher maintenance risk.</p>
+                    <div class="tags">
+                      <span class="tag">MIT</span>
+                      <span class="tag">small</span>
+                      <span class="tag">risk</span>
                     </div>
-                    <div class="score">88/100</div>
-                  </article>
-                  <article class="repo-row">
-                    <div>
-                      <strong>insomnia/insomnia</strong>
-                      <p>
-                        Established API client with broad ecosystem and active maintenance signals.
-                      </p>
-                    </div>
-                    <div class="score">82/100</div>
-                  </article>
-                </div>
-              </section>
-            </div>
+                  </div>
+                  <div class="score">68/100</div>
+                </article>
+              </div>
+            </section>
           </div>
         </div>
+      </div>
+    </section>
+
+    <main>
+      <section id="video" class="shell section">
+        <h2>A real first-run walkthrough.</h2>
+        <p class="section-lede">
+          The included video shows the user path from install command to MCP client configuration,
+          repository search, comparison, and integration notes.
+        </p>
+        <div class="video-frame">
+          <video
+            src="./github-search-mcp-demo.mp4"
+            poster="./assets/demo-poster.png"
+            controls
+            preload="metadata"
+          ></video>
+        </div>
       </section>
 
-      <section id="video" class="shell video-section">
-        <div class="section-head">
-          <h2>One minute from install to useful answer.</h2>
-          <p>
-            The video walks through the first-run experience: start the server, connect an MCP
-            client, search, analyze, compare, and produce integration notes.
+      <section id="flow" class="shell section">
+        <h2>Built around the way developers research dependencies.</h2>
+        <p class="section-lede">
+          Search starts broad, then the MCP server narrows each candidate with structured signals
+          your agent can use.
+        </p>
+        <div class="flow">
+          <article class="flow-card">
+            <code>01</code>
+            <h3>Search</h3>
+            <p>
+              Query GitHub repositories by intent, language, topics, stars, freshness, and license
+              needs.
+            </p>
+          </article>
+          <article class="flow-card">
+            <code>02</code>
+            <h3>Inspect</h3>
+            <p>
+              Read repository metadata, README content, file trees, package signals, docs, and
+              license data.
+            </p>
+          </article>
+          <article class="flow-card">
+            <code>03</code>
+            <h3>Compare</h3>
+            <p>
+              Rank candidates with explainable scoring for maintenance, adoption, documentation, and
+              risk.
+            </p>
+          </article>
+          <article class="flow-card">
+            <code>04</code>
+            <h3>Adopt</h3>
+            <p>
+              Generate concise integration notes with install commands, key files, usage steps, and
+              caveats.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="commands" class="shell section split">
+        <div>
+          <h2>Copy the setup and run.</h2>
+          <p class="section-lede">
+            The package runs over stdio by default, works with any MCP-compatible client, and uses a
+            token only when you want higher GitHub API limits.
           </p>
         </div>
-        <video
-          controls
-          preload="metadata"
-          poster="./assets/demo-poster.png"
-          src="./oss-research-mcp-demo.mp4"
-        ></video>
-      </section>
+        <div class="terminal">
+          <div class="terminal-head">
+            <span>terminal</span>
+            <span>GitHub Search MCP</span>
+          </div>
+          <pre><code><span class="muted"># Run without installing</span>
+<span class="green">npx</span> github-search-mcp
 
-      <section id="flow" class="shell flow">
-        <div class="section-head">
-          <h2>The workflow users actually follow.</h2>
-          <p>
-            No custom dashboard is required. The server adds GitHub research tools to the MCP client
-            the user already works in.
-          </p>
-        </div>
-        <div class="steps">
-          <article class="step">
-            <span>1</span>
-            <h3>Run it</h3>
-            <p>Start with npx or a global npm install. The default transport is stdio.</p>
-          </article>
-          <article class="step">
-            <span>2</span>
-            <h3>Connect it</h3>
-            <p>Add one MCP server entry. A GitHub token is optional for higher limits.</p>
-          </article>
-          <article class="step">
-            <span>3</span>
-            <h3>Ask naturally</h3>
-            <p>Search alternatives, inspect licenses, compare libraries, and read files.</p>
-          </article>
-          <article class="step">
-            <span>4</span>
-            <h3>Ship the decision</h3>
-            <p>Generate concise integration notes with risk, license, and setup context.</p>
-          </article>
-        </div>
-      </section>
+<span class="muted"># Optional: higher GitHub rate limits</span>
+GITHUB_TOKEN=ghp_xxx <span class="green">npx</span> github-search-mcp
 
-      <section id="commands" class="shell commands">
-        <div class="section-head">
-          <h2>Copy-paste setup.</h2>
-          <p>These commands are the same flow covered in the demo video.</p>
-        </div>
-        <div class="code-grid">
-          <pre><code>npx oss-research-mcp
-
-# optional, higher GitHub rate limits
-GITHUB_TOKEN=ghp_xxx npx oss-research-mcp</code></pre>
-          <pre><code>{
-  "mcpServers": {
-    "oss-research": {
-      "command": "npx",
-      "args": ["-y", "oss-research-mcp"],
-      "env": { "GITHUB_TOKEN": "" }
+<span class="muted"># MCP client entry</span>
+{
+  <span class="blue">"mcpServers"</span>: {
+    <span class="blue">"github-search"</span>: {
+      <span class="blue">"command"</span>: <span class="green">"npx"</span>,
+      <span class="blue">"args"</span>: [<span class="green">"-y"</span>, <span class="green">"github-search-mcp"</span>]
     }
   }
 }</code></pre>
         </div>
       </section>
+
+      <section id="tools" class="shell section split">
+        <div>
+          <h2>Tool names stay stable for agents.</h2>
+          <p class="section-lede">
+            The public product is GitHub Search MCP. The MCP tool prefix remains
+            <code>oss_</code> for compatibility with the tested API contract.
+          </p>
+        </div>
+        <div class="tool-table">
+          <div class="tool-row">
+            <code>oss_search_repositories</code>
+            <span>Find repositories by query and filters.</span>
+          </div>
+          <div class="tool-row">
+            <code>oss_analyze_repository</code>
+            <span>Profile license, docs, package health, maintenance, and risk.</span>
+          </div>
+          <div class="tool-row">
+            <code>oss_compare_repositories</code>
+            <span>Rank several candidates with explainable scoring.</span>
+          </div>
+          <div class="tool-row">
+            <code>oss_generate_integration_notes</code>
+            <span>Create practical adoption notes for the selected repository.</span>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer class="shell footer">
-      <span>Read-only MCP tools for open-source repository research.</span>
+    <footer class="footer">
+      <div class="shell">
+        GitHub Search MCP is read-only, local-first, and designed for agentic repository research.
+      </div>
     </footer>
   </body>
 </html>

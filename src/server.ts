@@ -55,7 +55,7 @@ export function createServerContext(options: CreateServerOptions): ServerContext
 /** Build an McpServer instance with all tools registered against a shared context. */
 export function createMcpServer(context: ServerContext): McpServer {
   const server = new McpServer(
-    { name: "oss-research-mcp", version: context.version, title: "OSS Research MCP" },
+    { name: "github-search-mcp", version: context.version, title: "GitHub Search MCP" },
     { capabilities: { tools: {} }, instructions: SERVER_DESCRIPTION },
   );
   registerAllTools(server, context);

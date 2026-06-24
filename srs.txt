@@ -1,12 +1,12 @@
-# SRS: OSS Research MCP Server
+# SRS: GitHub Search MCP Server
 
 ## 1. Название проекта
 
-**OSS Research MCP**
+**GitHub Search MCP**
 
 Альтернативные названия:
 
-* `oss-research-mcp`
+* `github-search-mcp`
 * `github-oss-mcp`
 * `open-source-finder-mcp`
 * `repo-scout-mcp`
@@ -14,7 +14,7 @@
 Рекомендуемое финальное имя:
 
 ```text
-oss-research-mcp
+github-search-mcp
 ```
 
 ## 2. Цель проекта
@@ -107,7 +107,7 @@ MCP Client
    |
    | MCP protocol
    |
-OSS Research MCP Server
+GitHub Search MCP Server
    |
    |--- GitHub REST API Adapter
    |--- Repository Analyzer
@@ -280,7 +280,7 @@ GITHUB_TOKEN=
 OSS_MCP_TRANSPORT=stdio
 OSS_MCP_PORT=7345
 OSS_MCP_CACHE_ENABLED=true
-OSS_MCP_CACHE_PATH=~/.oss-research-mcp/cache.sqlite
+OSS_MCP_CACHE_PATH=~/.github-search-mcp/cache.sqlite
 OSS_MCP_CACHE_TTL_HOURS=24
 OSS_MCP_DEEPWIKI_ENABLED=false
 OSS_MCP_MAX_RESULTS=20
@@ -293,7 +293,7 @@ OSS_MCP_LOG_LEVEL=info
 Optional config path:
 
 ```text
-~/.oss-research-mcp/config.json
+~/.github-search-mcp/config.json
 ```
 
 Example:
@@ -1058,13 +1058,13 @@ type ScoreReport = {
 Сервер должен запускаться через CLI command:
 
 ```bash
-oss-research-mcp
+github-search-mcp
 ```
 
 Или через npm:
 
 ```bash
-npx oss-research-mcp
+npx github-search-mcp
 ```
 
 ## FR-002: STDIO mode
@@ -1076,7 +1076,7 @@ npx oss-research-mcp
 Сервер должен поддерживать optional Streamable HTTP mode:
 
 ```bash
-oss-research-mcp --transport http --port 7345
+github-search-mcp --transport http --port 7345
 ```
 
 ## FR-004: GitHub search
@@ -1228,13 +1228,13 @@ GitHub token должен читаться только из environment variabl
 Пользователь должен иметь возможность установить сервер одной командой:
 
 ```bash
-npm install -g oss-research-mcp
+npm install -g github-search-mcp
 ```
 
 или запустить без установки:
 
 ```bash
-npx oss-research-mcp
+npx github-search-mcp
 ```
 
 ## NFR-005: Open-source readiness
@@ -1428,7 +1428,7 @@ Adapter должен использовать GitHub REST API для:
 ```http
 Accept: application/vnd.github+json
 X-GitHub-Api-Version: 2026-03-10
-User-Agent: oss-research-mcp
+User-Agent: github-search-mcp
 ```
 
 Если token есть:
@@ -1565,14 +1565,14 @@ Tool outputs должны быть:
 ## 25.1 Help
 
 ```bash
-oss-research-mcp --help
+github-search-mcp --help
 ```
 
 Должно показать:
 
 ```text
 Usage:
-  oss-research-mcp [options]
+  github-search-mcp [options]
 
 Options:
   --transport stdio|http
@@ -1585,7 +1585,7 @@ Options:
 ## 25.2 Version
 
 ```bash
-oss-research-mcp --version
+github-search-mcp --version
 ```
 
 Должно вернуть version из `package.json`.
@@ -1595,7 +1595,7 @@ oss-research-mcp --version
 Server name:
 
 ```text
-oss-research-mcp
+github-search-mcp
 ```
 
 Server description:
@@ -1742,7 +1742,7 @@ Apache-2.0
 Репозиторий должен иметь структуру:
 
 ```text
-oss-research-mcp/
+github-search-mcp/
   README.md
   LICENSE
   SECURITY.md

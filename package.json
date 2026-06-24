@@ -1,7 +1,7 @@
 {
-  "name": "oss-research-mcp",
+  "name": "github-search-mcp",
   "version": "1.0.0",
-  "description": "MCP server for discovering, analyzing, comparing, and selecting open-source GitHub repositories.",
+  "description": "MCP server for searching GitHub repositories, comparing open-source candidates, and generating integration notes.",
   "keywords": [
     "mcp",
     "model-context-protocol",
@@ -13,7 +13,7 @@
     "alternatives"
   ],
   "license": "MIT",
-  "author": "OSS Research MCP contributors",
+  "author": "GitHub Search MCP contributors",
   "homepage": "https://github.com/HabrielStark/github-search-mcp#readme",
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "packageManager": "pnpm@10.18.3",
   "type": "module",
   "bin": {
+    "github-search-mcp": "dist/cli.js",
     "oss-research-mcp": "dist/cli.js"
   },
   "main": "dist/index.js",
@@ -73,6 +74,9 @@
   },
   "optionalDependencies": {
     "better-sqlite3": "12.10.0"
+  },
+  "overrides": {
+    "qs": "6.15.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

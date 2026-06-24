@@ -10,7 +10,7 @@ acknowledge reports within 72 hours.
 
 ## Security model
 
-`oss-research-mcp` is designed to be safe by default:
+`github-search-mcp` is designed to be safe by default:
 
 - **Read-only.** The server performs no destructive operations: no creating
   issues/PRs, no commits, no file writes, no repository changes.

@@ -28,7 +28,7 @@ export const TOOL_NAMES = [
   "oss_health_check",
 ] as const;
 
-/** Register all OSS Research MCP tools on the server. */
+/** Register all GitHub Search MCP tools on the server. */
 export function registerAllTools(server: McpServer, ctx: ServerContext): void {
   registerSearchRepositories(server, ctx);
   registerGetRepositoryProfile(server, ctx);

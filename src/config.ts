@@ -38,7 +38,7 @@ export interface CliOverrides {
 export interface LoadConfigOptions {
   env?: NodeJS.ProcessEnv;
   overrides?: CliOverrides;
-  /** Explicit config file path (mainly for tests). Defaults to ~/.oss-research-mcp/config.json. */
+  /** Explicit config file path (mainly for tests). Defaults to ~/.github-search-mcp/config.json. */
   configPath?: string;
   /** Override home dir resolution (mainly for tests). */
   home?: string;
@@ -161,7 +161,7 @@ export function loadConfig(options: LoadConfigOptions = {}): Config {
   const home = options.home ?? homedir();
   const overrides = options.overrides ?? {};
 
-  const configPath = options.configPath ?? join(home, ".oss-research-mcp", "config.json");
+  const configPath = options.configPath ?? join(home, ".github-search-mcp", "config.json");
   const file = readFileConfig(configPath);
 
   const tokenEnvName =
@@ -187,7 +187,7 @@ export function loadConfig(options: LoadConfigOptions = {}): Config {
     overrides.cache ?? parseBool(env.OSS_MCP_CACHE_ENABLED) ?? file.cache?.enabled ?? true;
 
   const cachePathRaw =
-    env.OSS_MCP_CACHE_PATH ?? file.cache?.path ?? join("~", ".oss-research-mcp", "cache.sqlite");
+    env.OSS_MCP_CACHE_PATH ?? file.cache?.path ?? join("~", ".github-search-mcp", "cache.sqlite");
   const cachePathExpanded = expandHome(cachePathRaw, home);
   const cachePath = isAbsolute(cachePathExpanded)
     ? cachePathExpanded

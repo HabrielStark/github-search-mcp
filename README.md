@@ -1,56 +1,48 @@
-# OSS Research MCP
+# GitHub Search MCP
 
-> MCP server for discovering, analyzing, comparing, and selecting open-source GitHub repositories.
+> Read-only MCP server for searching GitHub repositories, comparing open-source candidates, and generating practical integration notes.
 
-`oss-research-mcp` is a free, open-source [Model Context Protocol](https://modelcontextprotocol.io)
-server. It gives any MCP-compatible client a set of read-only tools to find
-free open-source alternatives to paid APIs/SDKs/SaaS, analyze repositories,
-check licenses, compare options, and produce concise integration notes.
+`github-search-mcp` gives any MCP-compatible client a focused set of tools for
+repository research. It searches GitHub, inspects licenses and project health,
+compares candidates, and returns structured output your agent can use directly.
 
-- **No paid API required** — uses the public GitHub REST API.
-- **No vendor lock-in** — works with any MCP client, any AI provider.
-- **Read-only by default** — never writes to your repos or your project.
-- **Safe, structured output** — repository content is treated as untrusted data.
-
-## Why
-
-Picking an open-source dependency means weighing relevance, license risk,
-maintenance health, documentation, adoption, and integration effort. This
-server automates that research and returns compact, machine-readable reports so
-your agent (or you) can decide quickly and safely.
+- **GitHub-native research**: public GitHub REST API, optional token for higher limits.
+- **Read-only by design**: no issue, PR, commit, file, or shell writes.
+- **Agent-friendly output**: compact JSON plus readable summaries.
+- **Dependency decisions**: license, maintenance, docs, adoption, package signals, and risk.
 
 ## Quick start
 
-Run without installing (recommended):
+Run without installing:
 
 ```bash
-npx oss-research-mcp
+npx github-search-mcp
 ```
 
 Or install globally:
 
 ```bash
-npm install -g oss-research-mcp
-oss-research-mcp
+npm install -g github-search-mcp
+github-search-mcp
 ```
 
 The server speaks MCP over **stdio** by default. A GitHub token is optional but
 recommended for higher rate limits:
 
 ```bash
-GITHUB_TOKEN=ghp_xxx npx oss-research-mcp
+GITHUB_TOKEN=ghp_xxx npx github-search-mcp
 ```
 
 ## Connect to an MCP client
 
-Most clients accept a server entry like this (stdio):
+Most clients accept a server entry like this:
 
 ```json
 {
   "mcpServers": {
-    "oss-research": {
+    "github-search": {
       "command": "npx",
-      "args": ["-y", "oss-research-mcp"],
+      "args": ["-y", "github-search-mcp"],
       "env": { "GITHUB_TOKEN": "" }
     }
   }
@@ -60,44 +52,45 @@ Most clients accept a server entry like this (stdio):
 To use the optional HTTP transport instead:
 
 ```bash
-oss-research-mcp --transport http --port 7345
-# Streamable HTTP endpoint: http://127.0.0.1:7345/mcp  (localhost only, no auth)
+github-search-mcp --transport http --port 7345
+# Streamable HTTP endpoint: http://127.0.0.1:7345/mcp
 ```
 
-See [`examples/`](examples/) for ready-to-copy client configs and tool calls,
-and [`docs/`](docs/) for the full tool and configuration reference.
+The legacy `oss-research-mcp` binary is kept as an alias for compatibility.
 
 ## Demo
 
-Open the polished user-experience demo at [`demo/index.html`](demo/index.html)
-or watch the included video at
-[`demo/oss-research-mcp-demo.mp4`](demo/oss-research-mcp-demo.mp4). The demo
-shows the complete first-run flow: start the server, connect an MCP client,
-search GitHub, analyze repositories, compare candidates, and generate
-integration notes.
+Open the user-experience demo at [`demo/index.html`](demo/index.html), or watch
+the included walkthrough:
+
+[`demo/github-search-mcp-demo.mp4`](demo/github-search-mcp-demo.mp4)
+
+The demo shows the first-run path: start the server, connect an MCP client,
+search GitHub, compare candidates, and generate integration notes.
 
 ## Tools
 
-All tools are prefixed with `oss_` and are read-only.
+The product is named GitHub Search MCP. Tool names keep the tested `oss_` prefix
+for API compatibility.
 
 | Tool                                | Purpose                                                                           |
 | ----------------------------------- | --------------------------------------------------------------------------------- |
-| `oss_search_repositories`           | Search GitHub repositories by query/filters.                                      |
+| `oss_search_repositories`           | Search GitHub repositories by query and filters.                                  |
 | `oss_get_repository_profile`        | Basic repository metadata.                                                        |
-| `oss_get_repository_tree`           | File/directory tree of a branch.                                                  |
-| `oss_read_repository_file`          | Read a single text file (binary rejected, large files truncated).                 |
+| `oss_get_repository_tree`           | File and directory tree of a branch.                                              |
+| `oss_read_repository_file`          | Read a single text file, with binary rejection and truncation guards.             |
 | `oss_get_readme`                    | Fetch the README.                                                                 |
-| `oss_check_license`                 | Detect license and classify rights & risk.                                        |
+| `oss_check_license`                 | Detect license and classify rights and risk.                                      |
 | `oss_analyze_repository`            | Full analysis: profile, license, docs, maintenance, package signals, risk, score. |
-| `oss_compare_repositories`          | Score and rank multiple repositories; pick a winner.                              |
-| `oss_find_open_source_alternatives` | Find ranked OSS alternatives for a target/use case.                               |
+| `oss_compare_repositories`          | Score and rank multiple repositories.                                             |
+| `oss_find_open_source_alternatives` | Find ranked OSS alternatives for a target or use case.                            |
 | `oss_generate_integration_notes`    | Read-only integration notes for adopting a repo.                                  |
-| `oss_deepwiki_summary`              | DeepWiki: AI summary (answer + topics) for a repo.                                |
-| `oss_health_check`                  | Server status, version, cache backend, rate limit.                                |
+| `oss_deepwiki_summary`              | Optional DeepWiki summary for a repo.                                             |
+| `oss_health_check`                  | Server status, version, cache backend, and rate limit.                            |
 
 ### Example tool calls
 
-Find alternatives to Stripe:
+Find alternatives to a paid API:
 
 ```json
 {
@@ -133,26 +126,26 @@ Compare libraries:
 ## Configuration
 
 Configure via environment variables (see [`.env.example`](.env.example)) and/or
-an optional config file at `~/.oss-research-mcp/config.json`. CLI flags override
+an optional config file at `~/.github-search-mcp/config.json`. CLI flags override
 both.
 
-| Variable                     | Default                            | Description                                                                           |
-| ---------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`               | _(unset)_                          | Optional token for higher rate limits. Read from env only.                            |
-| `OSS_MCP_TRANSPORT`          | `stdio`                            | `stdio` or `http`.                                                                    |
-| `OSS_MCP_PORT`               | `7345`                             | HTTP port.                                                                            |
-| `OSS_MCP_CACHE_ENABLED`      | `true`                             | Enable response caching.                                                              |
-| `OSS_MCP_CACHE_PATH`         | `~/.oss-research-mcp/cache.sqlite` | SQLite cache path.                                                                    |
-| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                               | Cache TTL in hours.                                                                   |
-| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                            | Optional DeepWiki adapter. Set `true` to enable external calls to `mcp.deepwiki.com`. |
-| `OSS_MCP_MAX_RESULTS`        | `20`                               | Default max search results.                                                           |
-| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                            | Outbound request timeout.                                                             |
-| `OSS_MCP_LOG_LEVEL`          | `info`                             | `debug` / `info` / `warn` / `error`.                                                  |
+| Variable                     | Default                             | Description                                                                           |
+| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`               | _(unset)_                           | Optional token for higher rate limits. Read from env only.                            |
+| `OSS_MCP_TRANSPORT`          | `stdio`                             | `stdio` or `http`.                                                                    |
+| `OSS_MCP_PORT`               | `7345`                              | HTTP port.                                                                            |
+| `OSS_MCP_CACHE_ENABLED`      | `true`                              | Enable response caching.                                                              |
+| `OSS_MCP_CACHE_PATH`         | `~/.github-search-mcp/cache.sqlite` | SQLite cache path.                                                                    |
+| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                                | Cache TTL in hours.                                                                   |
+| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                             | Optional DeepWiki adapter. Set `true` to enable external calls to `mcp.deepwiki.com`. |
+| `OSS_MCP_MAX_RESULTS`        | `20`                                | Default max search results.                                                           |
+| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                             | Outbound request timeout.                                                             |
+| `OSS_MCP_LOG_LEVEL`          | `info`                              | `debug` / `info` / `warn` / `error`.                                                  |
 
 CLI options:
 
 ```text
-oss-research-mcp [options]
+github-search-mcp [options]
   --transport stdio|http
   --port <number>
   --cache true|false
@@ -164,34 +157,25 @@ oss-research-mcp [options]
 
 ## GitHub API limits
 
-The public GitHub REST API allows ~60 requests/hour unauthenticated and
-~5,000/hour with a token. Responses are cached (SQLite by default, in-memory
-fallback) to minimize requests. Every tool result includes a `rateLimit`
-summary, and the server warns (on stderr) when the remaining quota is low.
+The public GitHub REST API allows about 60 requests/hour unauthenticated and
+about 5,000/hour with a token. Responses are cached to minimize requests. Every
+tool result includes a rate-limit summary, and the server warns on stderr when
+the remaining quota is low.
 
 ## Security notes
 
-- **Read-only**: no issue/PR/commit/file writes; no shell execution.
+- **Read-only**: no issue, PR, commit, file writes, or shell execution.
 - **Domain allowlist**: outbound HTTPS only to `api.github.com`,
-  `raw.githubusercontent.com`, and `mcp.deepwiki.com` when DeepWiki is enabled
-  with `OSS_MCP_DEEPWIKI_ENABLED=true`.
-- **Untrusted content**: READMEs, file contents, descriptions and topics are
+  `raw.githubusercontent.com`, and `mcp.deepwiki.com` when DeepWiki is enabled.
+- **Untrusted content**: READMEs, file contents, descriptions, and topics are
   returned as data and must not be treated as instructions.
-- **Secret hygiene**: the GitHub token is read only from an environment
-  variable and is never logged, cached, or returned in tool output.
-- **HTTP transport** has no authentication, binds to loopback by default, and
-  rejects untrusted `Host` headers. Do not expose it publicly without an
-  authenticating proxy.
+- **Secret hygiene**: the GitHub token is read only from an environment variable
+  and is never logged, cached, or returned in tool output.
+- **HTTP transport**: binds to loopback by default and rejects untrusted `Host`
+  headers. Do not expose it publicly without an authenticating proxy.
 
-See [SECURITY.md](SECURITY.md) for the full policy and how to report issues.
+See [SECURITY.md](SECURITY.md) for the full policy and reporting process.
 
 ## License
 
-[MIT](LICENSE) — simple, permissive, commercial-friendly.
-
-## Contributing
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and our
-[Code of Conduct](CODE_OF_CONDUCT.md). Run `pnpm install`, then
-`pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm audit --prod && npm audit --omit=dev`
-before opening a PR.
+[MIT](LICENSE), simple and permissive.

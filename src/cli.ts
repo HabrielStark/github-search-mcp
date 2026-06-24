@@ -7,10 +7,10 @@ import { createServerContext, createMcpServer } from "./server.js";
 import { startHttpServer, type HttpServerHandle } from "./httpServer.js";
 import { readVersion } from "./version.js";
 
-const HELP = `oss-research-mcp — MCP server for open-source GitHub research.
+const HELP = `github-search-mcp - MCP server for GitHub repository search and comparison.
 
 Usage:
-  oss-research-mcp [options]
+  github-search-mcp [options]
 
 Options:
   --transport stdio|http       Transport to use (default: stdio).
@@ -147,7 +147,7 @@ async function main(): Promise<void> {
   } else {
     stdioServer = createMcpServer(context);
     await stdioServer.connect(new StdioServerTransport());
-    logger.info("oss-research-mcp ready (stdio)", {
+    logger.info("github-search-mcp ready (stdio)", {
       version: appVersion,
       cache: cache.backend,
       deepwiki: config.deepwiki.enabled,

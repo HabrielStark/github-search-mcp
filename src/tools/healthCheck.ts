@@ -16,7 +16,7 @@ export function registerHealthCheck(server: McpServer, ctx: ServerContext): void
     () =>
       runTool(ctx, async () => {
         const result: HealthCheckResult = {
-          name: "oss-research-mcp",
+          name: "github-search-mcp",
           version: ctx.version,
           status: "ok",
           transport: ctx.config.transport,

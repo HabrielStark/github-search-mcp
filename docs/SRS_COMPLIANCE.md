@@ -18,24 +18,24 @@ as of the current hardening pass.
 
 ## Non-Functional And Security Requirements
 
-| Area                                       | Status | Evidence                                                                                              |
-| ------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------- |
-| NFR-001 performance/reliability            | Pass   | retries, timeout/deadline tests, full suite and live suite                                            |
-| NFR-003/NFR-004 portability/installability | Pass   | Node 20+ package metadata, `npm exec --package . -- oss-research-mcp --version`, `npm pack --dry-run` |
-| NFR-005 open-source readiness              | Pass   | README, LICENSE, SECURITY, CONTRIBUTING, CODE_OF_CONDUCT, docs, examples included in package          |
-| NFR-006/NFR-007 security/privacy           | Pass   | untrusted-content labeling, domain allowlist, redaction, env-only token, local HTTP Host guard        |
-| SEC-001/SEC-002 read-only/no shell         | Pass   | tool annotations and implementation contain no write/shell execution path                             |
-| SEC-003 domain allowlist                   | Pass   | GitHub client rejects DeepWiki redirects even when DeepWiki is enabled; DeepWiki is gated separately  |
-| SEC-004 prompt-injection resistance        | Pass   | server instructions and integration notes label repository text as untrusted data                     |
-| SEC-005 output/file limits                 | Pass   | README/file byte caps, result caps, repository-count caps, `maxFilesToInspect` analyzer/tool tests    |
-| SEC-006 secrets redaction                  | Pass   | `runTool` redacts text and structuredContent; logger redaction tests                                  |
-| SEC-007 dependency safety                  | Pass   | pinned dependencies, `pnpm audit`, `npm audit --omit=dev`, Dependabot, CodeQL, SHA-pinned Actions     |
+| Area                                       | Status | Evidence                                                                                               |
+| ------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------ |
+| NFR-001 performance/reliability            | Pass   | retries, timeout/deadline tests, full suite and live suite                                             |
+| NFR-003/NFR-004 portability/installability | Pass   | Node 20+ package metadata, `npm exec --package . -- github-search-mcp --version`, `npm pack --dry-run` |
+| NFR-005 open-source readiness              | Pass   | README, LICENSE, SECURITY, CONTRIBUTING, CODE_OF_CONDUCT, docs, examples included in package           |
+| NFR-006/NFR-007 security/privacy           | Pass   | untrusted-content labeling, domain allowlist, redaction, env-only token, local HTTP Host guard         |
+| SEC-001/SEC-002 read-only/no shell         | Pass   | tool annotations and implementation contain no write/shell execution path                              |
+| SEC-003 domain allowlist                   | Pass   | GitHub client rejects DeepWiki redirects even when DeepWiki is enabled; DeepWiki is gated separately   |
+| SEC-004 prompt-injection resistance        | Pass   | server instructions and integration notes label repository text as untrusted data                      |
+| SEC-005 output/file limits                 | Pass   | README/file byte caps, result caps, repository-count caps, `maxFilesToInspect` analyzer/tool tests     |
+| SEC-006 secrets redaction                  | Pass   | `runTool` redacts text and structuredContent; logger redaction tests                                   |
+| SEC-007 dependency safety                  | Pass   | pinned dependencies, `pnpm audit`, `npm audit --omit=dev`, Dependabot, CodeQL, SHA-pinned Actions      |
 
 ## Acceptance Criteria
 
 | Criterion                                               | Status                      | Evidence                                                                                                 |
 | ------------------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------- |
-| npx/startup                                             | Pass                        | `npm exec --package . -- oss-research-mcp --version`                                                     |
+| npx/startup                                             | Pass                        | `npm exec --package . -- github-search-mcp --version`                                                    |
 | tools list                                              | Pass                        | built `TOOL_NAMES` = 12; Inspector `tools/list` succeeds                                                 |
 | real GitHub search/analyze/compare/license/alternatives | Pass                        | `pnpm test:live`; Inspector real GitHub search returned `react/react`                                    |
 | works without token                                     | Pass                        | live unauthenticated run and Inspector search without `GITHUB_TOKEN`                                     |
@@ -56,7 +56,7 @@ npm audit --omit=dev
 pnpm test:live
 pnpm test:mutation
 npm pack --dry-run --json --ignore-scripts
-npm exec --yes --package . -- oss-research-mcp --version
+npm exec --yes --package . -- github-search-mcp --version
 npm exec --yes --package @modelcontextprotocol/inspector@0.22.0 -- mcp-inspector --cli node dist/cli.js --method tools/list
 npm exec --yes --package @modelcontextprotocol/inspector@0.22.0 -- mcp-inspector --cli node dist/cli.js --method tools/call --tool-name oss_health_check
 npm exec --yes --package @modelcontextprotocol/inspector@0.22.0 -- mcp-inspector --cli node dist/cli.js --method tools/call --tool-name oss_search_repositories --tool-arg query=react --tool-arg limit=1

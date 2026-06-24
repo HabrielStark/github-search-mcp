@@ -292,7 +292,7 @@ describe("oss_health_check — exact output, no secrets", () => {
   it("reports status/version/cache/auth and a zero uptime under frozen time", async () => {
     const res = await h.client.callTool({ name: "oss_health_check", arguments: {} });
     expect(structured(res)).toEqual({
-      name: "oss-research-mcp",
+      name: "github-search-mcp",
       version: "9.9.9",
       status: "ok",
       transport: "stdio",

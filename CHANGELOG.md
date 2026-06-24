@@ -8,7 +8,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Initial stable release of the OSS Research MCP server.
+- Initial stable release of the GitHub Search MCP server.
 - 15 read-only MCP tools (all prefixed `oss_`):
   - `oss_search_repositories`, `oss_get_repository_profile`,
     `oss_get_repository_tree`, `oss_read_repository_file`, `oss_get_readme`,

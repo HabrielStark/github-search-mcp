@@ -14,7 +14,7 @@ import type { TreeFile } from "../types/toolResults.js";
 const GITHUB_API = "https://api.github.com";
 const GITHUB_API_HOST = "api.github.com";
 const API_VERSION = "2026-03-10";
-const USER_AGENT = "oss-research-mcp";
+const USER_AGENT = "github-search-mcp";
 const MAX_FILE_BYTES = 1_000_000;
 const MAX_README_BYTES = 2_000_000; // hard ceiling on README decode (memory guard)
 // Resilience policy for idempotent GETs.

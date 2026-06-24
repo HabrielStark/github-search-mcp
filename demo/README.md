@@ -1,35 +1,22 @@
-# Demo
+# GitHub Search MCP demo
 
-This directory contains the public-facing user experience demo for OSS Research
-MCP.
+This directory contains the public user-experience demo for GitHub Search MCP:
 
-## Open the interactive demo
+- `index.html` is a static, browser-openable product walkthrough.
+- `github-search-mcp-demo.mp4` is the included video walkthrough.
+- `assets/demo-poster.png` is the video poster.
+- `assets/github-search-logo-*.png` are the app icon variants.
 
-Open `demo/index.html` in a browser. It is a static page with no build step and
-no external network dependencies.
+Open the page directly:
 
-## Watch the video
-
-The demo video is `demo/oss-research-mcp-demo.mp4`. It shows the first-run user
-flow:
-
-1. Start the MCP server with `npx oss-research-mcp`.
-2. Add the server to an MCP client.
-3. Search GitHub repositories.
-4. Analyze license, maintenance, documentation, and risk.
-5. Compare candidates and generate integration notes.
-
-## Regenerate the video
-
-```bash
-python scripts/render-demo-video.py
+```powershell
+Start-Process .\demo\index.html
 ```
 
-The script uses Pillow plus the local `ffmpeg` binary and writes:
+Regenerate the video and logo variants:
 
-- `demo/assets/oss-research-logo-512.png`
-- `demo/assets/oss-research-logo-128.png`
-- `demo/assets/demo-poster.png`
-- `demo/oss-research-mcp-demo.mp4`
+```powershell
+python .\scripts\render-demo-video.py
+```
 
-Temporary frame files are written to `demo/.frames/` and removed automatically.
+The renderer requires Pillow and FFmpeg to be available on the machine.

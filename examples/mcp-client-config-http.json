@@ -1,5 +1,5 @@
 {
-  "comment": "Start the server first: oss-research-mcp --transport http --port 7345",
+  "comment": "Start the server first: github-search-mcp --transport http --port 7345",
   "mcpServers": {
     "oss-research-http": {
       "url": "http://127.0.0.1:7345/mcp"

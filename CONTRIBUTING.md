@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving **oss-research-mcp**!
+Thanks for your interest in improving **github-search-mcp**!
 
 ## Development setup
 

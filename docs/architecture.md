@@ -4,7 +4,7 @@
 MCP Client
    │  MCP protocol (stdio or Streamable HTTP)
    ▼
-OSS Research MCP Server
+GitHub Search MCP Server
    ├─ tools/            12 read-only MCP tools (oss_*)
    ├─ adapters/         GitHub REST client, optional DeepWiki client
    ├─ analyzers/        license, documentation, maintenance, package, risk,

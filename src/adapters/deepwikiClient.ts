@@ -58,7 +58,7 @@ async function liveCaller(
 ): Promise<DeepWikiToolResult> {
   // Defense-in-depth: the URL is constant, but still enforce the allowlist.
   assertAllowedUrl(DEEPWIKI_URL, { deepwikiEnabled: config.deepwiki.enabled });
-  const client = new Client({ name: "oss-research-mcp", version: "1.0.0" });
+  const client = new Client({ name: "github-search-mcp", version: "1.0.0" });
   const transport = new StreamableHTTPClientTransport(new URL(DEEPWIKI_URL));
   try {
     // Bound the handshake explicitly (the SDK's per-call timeout covers only

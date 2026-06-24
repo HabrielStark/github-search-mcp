@@ -3,28 +3,28 @@
 Configuration is resolved with this precedence (low → high):
 
 1. Built-in defaults
-2. `~/.oss-research-mcp/config.json` (optional)
+2. `~/.github-search-mcp/config.json` (optional)
 3. Environment variables
 4. CLI flags
 
 ## Environment variables
 
-| Variable                     | Default                            | Description                                                                                                 |
-| ---------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`               | _(unset)_                          | Optional token for higher rate limits. **Read from env only** — never from the config file, logs, or cache. |
-| `OSS_MCP_TRANSPORT`          | `stdio`                            | `stdio` or `http`.                                                                                          |
-| `OSS_MCP_PORT`               | `7345`                             | Port for the HTTP transport.                                                                                |
-| `OSS_MCP_CACHE_ENABLED`      | `true`                             | Enable response caching.                                                                                    |
-| `OSS_MCP_CACHE_PATH`         | `~/.oss-research-mcp/cache.sqlite` | SQLite cache file (`~` expands to home).                                                                    |
-| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                               | Cache TTL in hours.                                                                                         |
-| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                            | Optional DeepWiki adapter. Set `true` to enable external calls to `mcp.deepwiki.com`.                       |
-| `OSS_MCP_MAX_RESULTS`        | `20`                               | Default maximum search results.                                                                             |
-| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                            | Outbound request timeout (ms).                                                                              |
-| `OSS_MCP_LOG_LEVEL`          | `info`                             | `debug` / `info` / `warn` / `error`.                                                                        |
+| Variable                     | Default                             | Description                                                                                                 |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`               | _(unset)_                           | Optional token for higher rate limits. **Read from env only** — never from the config file, logs, or cache. |
+| `OSS_MCP_TRANSPORT`          | `stdio`                             | `stdio` or `http`.                                                                                          |
+| `OSS_MCP_PORT`               | `7345`                              | Port for the HTTP transport.                                                                                |
+| `OSS_MCP_CACHE_ENABLED`      | `true`                              | Enable response caching.                                                                                    |
+| `OSS_MCP_CACHE_PATH`         | `~/.github-search-mcp/cache.sqlite` | SQLite cache file (`~` expands to home).                                                                    |
+| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                                | Cache TTL in hours.                                                                                         |
+| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                             | Optional DeepWiki adapter. Set `true` to enable external calls to `mcp.deepwiki.com`.                       |
+| `OSS_MCP_MAX_RESULTS`        | `20`                                | Default maximum search results.                                                                             |
+| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                             | Outbound request timeout (ms).                                                                              |
+| `OSS_MCP_LOG_LEVEL`          | `info`                              | `debug` / `info` / `warn` / `error`.                                                                        |
 
 ## Config file
 
-Optional `~/.oss-research-mcp/config.json`:
+Optional `~/.github-search-mcp/config.json`:
 
 ```json
 {
