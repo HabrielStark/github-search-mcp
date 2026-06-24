@@ -105,20 +105,33 @@ def paste_logo(img: Image.Image, logo: Image.Image, xy: tuple[int, int], size: i
 
 
 def prepare_logo() -> Image.Image:
+    if not SOURCE_LOGO.exists():
+        raise FileNotFoundError(f"Missing source logo: {SOURCE_LOGO}")
+    source = Image.open(SOURCE_LOGO).convert("RGBA")
+    px = source.load()
+    width, height = source.size
+    alpha = Image.new("L", source.size, 255)
+    apx = alpha.load()
+    seen = set()
+    stack = [(0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1)]
+    while stack:
+        x, y = stack.pop()
+        if (x, y) in seen or x < 0 or y < 0 or x >= width or y >= height:
+            continue
+        seen.add((x, y))
+        r, g, b, _ = px[x, y]
+        if r < 238 or g < 238 or b < 238:
+            continue
+        apx[x, y] = 0
+        stack.extend(((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)))
+    source.putalpha(alpha)
+    bbox = alpha.getbbox()
+    if bbox is None:
+        raise RuntimeError("Could not isolate logo foreground")
+    source = source.crop(bbox)
     canvas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(canvas)
-    draw.rounded_rectangle((94, 94, 930, 930), radius=198, fill=(1, 4, 9, 255))
-    draw.rounded_rectangle((94, 94, 930, 930), radius=198, outline=(48, 54, 61, 255), width=18)
-    draw.ellipse((282, 260, 706, 684), outline=(255, 255, 255, 255), width=74)
-    draw.line((650, 626, 808, 784), fill=(255, 255, 255, 255), width=86)
-    draw.line((402, 398, 402, 622), fill=(255, 255, 255, 255), width=42)
-    draw.line((402, 622, 568, 456), fill=(255, 255, 255, 255), width=42)
-    draw.ellipse((348, 344, 456, 452), fill=(255, 255, 255, 255))
-    draw.ellipse((374, 370, 430, 426), fill=(1, 4, 9, 255))
-    draw.ellipse((348, 568, 456, 676), fill=(255, 255, 255, 255))
-    draw.ellipse((374, 594, 430, 650), fill=(1, 4, 9, 255))
-    draw.ellipse((514, 402, 638, 526), fill=(63, 185, 80, 255))
-    draw.ellipse((548, 436, 604, 492), fill=(1, 4, 9, 255))
+    source.thumbnail((900, 900), Image.Resampling.LANCZOS)
+    canvas.paste(source, ((1024 - source.width) // 2, (1024 - source.height) // 2), source)
     canvas.resize((512, 512), Image.Resampling.LANCZOS).save(LOGO_512)
     canvas.resize((128, 128), Image.Resampling.LANCZOS).save(LOGO_128)
     return canvas

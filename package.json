@@ -37,11 +37,14 @@
     }
   },
   "files": [
+    "assets",
     "dist",
     "docs",
     "demo",
     "examples",
+    "media",
     "scripts",
+    "DESIGN.md",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",

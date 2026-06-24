@@ -1,15 +1,57 @@
+![GitHub Search MCP hero](assets/brand/github-search-mcp-readme-hero.png)
+
 # GitHub Search MCP
 
-> Read-only MCP server for searching GitHub repositories, comparing open-source candidates, and generating practical integration notes.
+<p align="center">
+  <a href="demo/index.html">Demo page</a> |
+  <a href="media/github-search-mcp-walkthrough.mp4">Play full MP4</a> |
+  <a href="DESIGN.md">Design system</a> |
+  <a href="SECURITY.md">Security</a>
+</p>
 
-`github-search-mcp` gives any MCP-compatible client a focused set of tools for
-repository research. It searches GitHub, inspects licenses and project health,
-compares candidates, and returns structured output your agent can use directly.
+<p align="center">
+  <img alt="MCP server" src="https://img.shields.io/badge/MCP-server-2f81f7?style=for-the-badge" />
+  <img alt="Read only" src="https://img.shields.io/badge/GitHub-read--only-238636?style=for-the-badge" />
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-3fb950?style=for-the-badge" />
+  <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D20-0d1117?style=for-the-badge" />
+</p>
 
-- **GitHub-native research**: public GitHub REST API, optional token for higher limits.
-- **Read-only by design**: no issue, PR, commit, file, or shell writes.
-- **Agent-friendly output**: compact JSON plus readable summaries.
-- **Dependency decisions**: license, maintenance, docs, adoption, package signals, and risk.
+**GitHub Search MCP** is a read-only Model Context Protocol server for repository
+research. It lets an MCP client search GitHub, inspect license and maintenance
+risk, compare open-source candidates, and generate practical integration notes.
+
+It is built for the moment when an agent asks: _Which repository should I use,
+why, and what should I check before I adopt it?_
+
+## Demo videos
+
+The preview below is an animated GIF. Use the MP4 link for the full walkthrough.
+
+| GitHub Search MCP walkthrough                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------ |
+| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](media/github-search-mcp-walkthrough.mp4) |
+| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                     |
+| [Play full MP4](media/github-search-mcp-walkthrough.mp4) · [Repo file](demo/github-search-mcp-demo.mp4) · 30s · 1920x1080 · 30fps    |
+
+Brand and video source files live under `assets/brand`, `demo`, `media`, and
+`scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).
+
+---
+
+## Why this is useful
+
+Choosing an open-source dependency is not just search. You need relevance,
+license safety, maintenance health, documentation quality, adoption signals,
+package metadata, and clear next steps. GitHub Search MCP gives your client a
+structured, read-only research loop for that decision.
+
+| Capability           | What the agent gets                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| Repository search    | GitHub results filtered by intent, language, topics, stars, freshness, and license preference. |
+| License and risk     | SPDX detection, permissive-license preference, unknown-license warnings, and repo-risk flags.  |
+| Repository analysis  | README, tree, package signals, docs quality, maintenance velocity, and adoption indicators.    |
+| Candidate comparison | Ranked options with explainable scoring instead of a loose list of links.                      |
+| Integration notes    | Install commands, important files, usage steps, caveats, and review reminders.                 |
 
 ## Quick start
 
@@ -26,16 +68,15 @@ npm install -g github-search-mcp
 github-search-mcp
 ```
 
-The server speaks MCP over **stdio** by default. A GitHub token is optional but
-recommended for higher rate limits:
+Use a token when you want higher GitHub API limits:
 
 ```bash
 GITHUB_TOKEN=ghp_xxx npx github-search-mcp
 ```
 
-## Connect to an MCP client
+The server speaks MCP over `stdio` by default.
 
-Most clients accept a server entry like this:
+## MCP client config
 
 ```json
 {
@@ -49,7 +90,7 @@ Most clients accept a server entry like this:
 }
 ```
 
-To use the optional HTTP transport instead:
+Optional HTTP transport:
 
 ```bash
 github-search-mcp --transport http --port 7345
@@ -58,37 +99,27 @@ github-search-mcp --transport http --port 7345
 
 The legacy `oss-research-mcp` binary is kept as an alias for compatibility.
 
-## Demo
-
-Open the user-experience demo at [`demo/index.html`](demo/index.html), or watch
-the included walkthrough:
-
-[`demo/github-search-mcp-demo.mp4`](demo/github-search-mcp-demo.mp4)
-
-The demo shows the first-run path: start the server, connect an MCP client,
-search GitHub, compare candidates, and generate integration notes.
-
 ## Tools
 
 The product is named GitHub Search MCP. Tool names keep the tested `oss_` prefix
 for API compatibility.
 
-| Tool                                | Purpose                                                                           |
-| ----------------------------------- | --------------------------------------------------------------------------------- |
-| `oss_search_repositories`           | Search GitHub repositories by query and filters.                                  |
-| `oss_get_repository_profile`        | Basic repository metadata.                                                        |
-| `oss_get_repository_tree`           | File and directory tree of a branch.                                              |
-| `oss_read_repository_file`          | Read a single text file, with binary rejection and truncation guards.             |
-| `oss_get_readme`                    | Fetch the README.                                                                 |
-| `oss_check_license`                 | Detect license and classify rights and risk.                                      |
-| `oss_analyze_repository`            | Full analysis: profile, license, docs, maintenance, package signals, risk, score. |
-| `oss_compare_repositories`          | Score and rank multiple repositories.                                             |
-| `oss_find_open_source_alternatives` | Find ranked OSS alternatives for a target or use case.                            |
-| `oss_generate_integration_notes`    | Read-only integration notes for adopting a repo.                                  |
-| `oss_deepwiki_summary`              | Optional DeepWiki summary for a repo.                                             |
-| `oss_health_check`                  | Server status, version, cache backend, and rate limit.                            |
+| Tool                                | Purpose                                                                     |
+| ----------------------------------- | --------------------------------------------------------------------------- |
+| `oss_search_repositories`           | Search GitHub repositories by query and filters.                            |
+| `oss_get_repository_profile`        | Basic repository metadata.                                                  |
+| `oss_get_repository_tree`           | File and directory tree of a branch.                                        |
+| `oss_read_repository_file`          | Read a single text file, with binary rejection and truncation guards.       |
+| `oss_get_readme`                    | Fetch the README.                                                           |
+| `oss_check_license`                 | Detect license and classify rights and risk.                                |
+| `oss_analyze_repository`            | Full profile, license, docs, maintenance, package signals, risk, and score. |
+| `oss_compare_repositories`          | Score and rank multiple repositories.                                       |
+| `oss_find_open_source_alternatives` | Find ranked OSS alternatives for a target or use case.                      |
+| `oss_generate_integration_notes`    | Read-only integration notes for adopting a repo.                            |
+| `oss_deepwiki_summary`              | Optional DeepWiki summary for a repo.                                       |
+| `oss_health_check`                  | Server status, version, cache backend, and rate limit.                      |
 
-### Example tool calls
+## Example tool calls
 
 Find alternatives to a paid API:
 
@@ -103,12 +134,6 @@ Find alternatives to a paid API:
     "licensePreference": "avoid-strong-copyleft"
   }
 }
-```
-
-Check a license:
-
-```json
-{ "name": "oss_check_license", "arguments": { "repository": "facebook/react" } }
 ```
 
 Compare libraries:
@@ -129,38 +154,18 @@ Configure via environment variables (see [`.env.example`](.env.example)) and/or
 an optional config file at `~/.github-search-mcp/config.json`. CLI flags override
 both.
 
-| Variable                     | Default                             | Description                                                                           |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`               | _(unset)_                           | Optional token for higher rate limits. Read from env only.                            |
-| `OSS_MCP_TRANSPORT`          | `stdio`                             | `stdio` or `http`.                                                                    |
-| `OSS_MCP_PORT`               | `7345`                              | HTTP port.                                                                            |
-| `OSS_MCP_CACHE_ENABLED`      | `true`                              | Enable response caching.                                                              |
-| `OSS_MCP_CACHE_PATH`         | `~/.github-search-mcp/cache.sqlite` | SQLite cache path.                                                                    |
-| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                                | Cache TTL in hours.                                                                   |
-| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                             | Optional DeepWiki adapter. Set `true` to enable external calls to `mcp.deepwiki.com`. |
-| `OSS_MCP_MAX_RESULTS`        | `20`                                | Default max search results.                                                           |
-| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                             | Outbound request timeout.                                                             |
-| `OSS_MCP_LOG_LEVEL`          | `info`                              | `debug` / `info` / `warn` / `error`.                                                  |
-
-CLI options:
-
-```text
-github-search-mcp [options]
-  --transport stdio|http
-  --port <number>
-  --cache true|false
-  --deepwiki true|false
-  --log-level debug|info|warn|error
-  -h, --help
-  -v, --version
-```
-
-## GitHub API limits
-
-The public GitHub REST API allows about 60 requests/hour unauthenticated and
-about 5,000/hour with a token. Responses are cached to minimize requests. Every
-tool result includes a rate-limit summary, and the server warns on stderr when
-the remaining quota is low.
+| Variable                     | Default                             | Description                                                |
+| ---------------------------- | ----------------------------------- | ---------------------------------------------------------- |
+| `GITHUB_TOKEN`               | _(unset)_                           | Optional token for higher rate limits. Read from env only. |
+| `OSS_MCP_TRANSPORT`          | `stdio`                             | `stdio` or `http`.                                         |
+| `OSS_MCP_PORT`               | `7345`                              | HTTP port.                                                 |
+| `OSS_MCP_CACHE_ENABLED`      | `true`                              | Enable response caching.                                   |
+| `OSS_MCP_CACHE_PATH`         | `~/.github-search-mcp/cache.sqlite` | SQLite cache path.                                         |
+| `OSS_MCP_CACHE_TTL_HOURS`    | `24`                                | Cache TTL in hours.                                        |
+| `OSS_MCP_DEEPWIKI_ENABLED`   | `false`                             | Optional DeepWiki adapter.                                 |
+| `OSS_MCP_MAX_RESULTS`        | `20`                                | Default max search results.                                |
+| `OSS_MCP_REQUEST_TIMEOUT_MS` | `15000`                             | Outbound request timeout.                                  |
+| `OSS_MCP_LOG_LEVEL`          | `info`                              | `debug`, `info`, `warn`, or `error`.                       |
 
 ## Security notes
 
