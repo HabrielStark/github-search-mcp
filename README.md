@@ -10,10 +10,21 @@
 </p>
 
 <p align="center">
-  <img alt="MCP server" src="https://img.shields.io/badge/MCP-server-2f81f7?style=for-the-badge" />
-  <img alt="Read only" src="https://img.shields.io/badge/GitHub-read--only-238636?style=for-the-badge" />
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-3fb950?style=for-the-badge" />
-  <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D20-0d1117?style=for-the-badge" />
+  <a href="https://modelcontextprotocol.io">
+    <img alt="MCP server" src="https://img.shields.io/badge/MCP-server-2f81f7?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/HabrielStark/github-search-mcp">
+    <img alt="GitHub repository" src="https://img.shields.io/badge/GitHub-repository-0d1117?style=for-the-badge" />
+  </a>
+  <a href="SECURITY.md">
+    <img alt="Read-only security model" src="https://img.shields.io/badge/security-read--only-238636?style=for-the-badge" />
+  </a>
+  <a href="LICENSE">
+    <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-3fb950?style=for-the-badge" />
+  </a>
+  <a href="package.json">
+    <img alt="Node 20 or newer" src="https://img.shields.io/badge/node-%3E%3D20-0d1117?style=for-the-badge" />
+  </a>
 </p>
 
 **GitHub Search MCP** is a read-only Model Context Protocol server for repository
@@ -27,11 +38,11 @@ why, and what should I check before I adopt it?_
 
 The preview below is an animated GIF. Use the MP4 link for the full walkthrough.
 
-| GitHub Search MCP walkthrough                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------ |
-| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](media/github-search-mcp-walkthrough.mp4) |
-| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                     |
-| [Play full MP4](media/github-search-mcp-walkthrough.mp4) · [Repo file](demo/github-search-mcp-demo.mp4) · 30s · 1920x1080 · 30fps    |
+| GitHub Search MCP walkthrough                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------- |
+| [![GitHub Search MCP walkthrough preview](media/github-search-mcp-walkthrough-preview.gif)](media/github-search-mcp-walkthrough.mp4)  |
+| First-run flow: install command, MCP client config, GitHub search, repository comparison, and integration notes.                      |
+| [Play full MP4](media/github-search-mcp-walkthrough.mp4) \| [Repo file](demo/github-search-mcp-demo.mp4) \| 30s \| 1920x1080 \| 30fps |
 
 Brand and video source files live under `assets/brand`, `demo`, `media`, and
 `scripts`. The visual system is documented in [`DESIGN.md`](DESIGN.md).
