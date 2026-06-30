@@ -76,7 +76,7 @@
     "zod": "4.4.3"
   },
   "optionalDependencies": {
-    "better-sqlite3": "12.10.0"
+    "better-sqlite3": "12.11.1"
   },
   "overrides": {
     "qs": "6.15.2"
